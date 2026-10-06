@@ -55,11 +55,11 @@ Navegador -> Controller -> Service -> Repository -> Banco de dados
 
 ## Pendências conhecidas
 
-1. **Telas:** a pasta `templates/` não existe (veja "Contrato das telas").
+
 2. **Banco:** faltam as linhas `spring.datasource.*` no `application.properties`.
 3. **Validação:** hoje só há checagem de campos obrigatórios, e-mail/CNPJ repetidos e tamanho do nome.
    Falta validar formato de e-mail, CNPJ e força da senha (próximo passo: Bean Validation,
    `spring-boot-starter-validation`).
 4. Não há tela/rota para trocar senha ou e-mail da conta.
 5. Não há administrador; ninguém consegue listar ou moderar usuários.
-6. Testes automatizados: apenas o `contextLoads` padrão do Spring (que exige o banco).
+
