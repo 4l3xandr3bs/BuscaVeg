@@ -5,21 +5,6 @@ Pessoas se cadastram informando seu perfil alimentar e localização; estabeleci
 cadastram para serem encontrados.
 
 
-
-## Tecnologias
-
-| Tecnologia | Para que serve no projeto |
-|---|---|
-| Java 17 | Linguagem |
-| Spring Boot | Framework que "monta" a aplicação e sobe o servidor web |
-| Spring Web MVC | Recebe as requisições do navegador (Controllers) |
-| Spring Data JPA / Hibernate | Conversa com o banco sem escrever SQL (Repositories e Entities) |
-| MySQL | Banco de dados |
-| Spring Security | Login, controle de acesso e criptografia de senha (BCrypt) |
-| Thymeleaf | Gera as páginas HTML a partir dos dados do Java |
-| Lombok | Gera getters/setters automaticamente (`@Data`) |
-| Maven | Gerencia dependências e compila (`pom.xml`) |
-
 ## Como o código está organizado
 
 Cada pedido do navegador percorre este caminho:
@@ -55,11 +40,12 @@ Navegador -> Controller -> Service -> Repository -> Banco de dados
 
 ## Pendências conhecidas
 
+1. CORRIGIR todos os <form> (th:action, th:object, th:field)
+2. REVISAR as rotas (GET /usuarioCTR/cadastro vs /formCadastrarUsuario)
+3. ADICIONAR os campos que faltam nos templates (latitude/longitude, datas)
+4. USAR th:href em vez de href hardcoded
+5. REMOVER campos que não existem no backend (username, role no formulário)
+6. TESTAR a mensagem de erro (th:if="${erro}") nas páginas
+7. IMPLEMENTAR o controlador/service de busca de empresas
 
-2. **Banco:** faltam as linhas `spring.datasource.*` no `application.properties`.
-3. **Validação:** hoje só há checagem de campos obrigatórios, e-mail/CNPJ repetidos e tamanho do nome.
-   Falta validar formato de e-mail, CNPJ e força da senha (próximo passo: Bean Validation,
-   `spring-boot-starter-validation`).
-4. Não há tela/rota para trocar senha ou e-mail da conta.
-5. Não há administrador; ninguém consegue listar ou moderar usuários.
 
