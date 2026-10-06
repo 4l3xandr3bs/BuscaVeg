@@ -4,10 +4,7 @@ Sistema web para **encontrar restaurantes e mercados com opções veganas e vege
 Pessoas se cadastram informando seu perfil alimentar e localização; estabelecimentos se
 cadastram para serem encontrados.
 
-> **Status:** em desenvolvimento. Já existem cadastro e login de pessoas e de empresas,
-> edição/exclusão da própria empresa e listagem de empresas. A busca com filtros,
-> avaliações, cardápio e status em tempo real ainda não foram implementados
-> (veja "Diagrama x código").
+
 
 ## Tecnologias
 
@@ -31,94 +28,6 @@ Cada pedido do navegador percorre este caminho:
 Navegador -> Controller -> Service -> Repository -> Banco de dados
               (recebe)     (regras)     (grava/lê)
 ```
-
-Todas as pastas ficam em `src/main/java/buscaveg/com/br/BuscaVeg/`:
-
-| Pasta | O que tem | Regra de ouro |
-|---|---|---|
-| `Controller/` | Recebe URLs, escolhe a tela | Sem regra de negócio, sem acesso direto ao banco |
-| `Service/` | Regras de negócio | É aqui que se decide "o que fazer" |
-| `Repository/` | Interfaces de acesso ao banco | Só fala com o banco |
-| `Entity/` | Classes que viram tabelas | Representam os dados |
-| `DTO/` | "Caixas de transporte" dos formulários | Só os campos que o formulário pode enviar |
-| `Excecao/` | `RegraDeNegocioException` | Erro causado pelo preenchimento (mostrado na tela) |
-| `Enum/` | Listas fechadas de valores | Evitam texto livre/erros de digitação |
-| `SecrityConfig/` | Configuração de segurança | Quem acessa o quê |
-
-(O nome da pasta `SecrityConfig` está sem o "u"; funciona, mas vale corrigir.)
-
-### Por que DTOs?
-
-Os formulários de cadastro pedem dados de **duas** entidades de uma vez (e-mail/senha da
-`Conta` + dados do perfil). Além disso, ligar o formulário direto à entidade permitiria que
-alguém enviasse campos extras (`id`, `conta`, `indiceVegFriendly`) e alterasse o que não
-deveria. O DTO aceita só os campos listados.
-
-## Modelo de dados
-
-A decisão de design mais importante: **o login fica separado dos perfis**.
-
-```
-              +---------+
-              |  Conta  |  e-mail, senha (hash), tipo (USUARIO | EMPRESA)
-              +----+----+
-      1 para 1     |     1 para 1      (cada Conta tem UM perfil: um OU outro)
-        +----------+----------+
-        v                     v
-  +-----------+        +--------------+
-  |  Usuario  |        | Empresarial  |
-  +-----------+        +--------------+
-```
-
-Pessoas e empresas entram no sistema exatamente do mesmo jeito. O diagrama de classes
-completo (inclusive o que ainda falta implementar) está em
-`Class_Diagram_BuscaVeg_revisado.png`.
-
-## Regras de negócio já implementadas
-
-- **Senha** nunca é salva em texto puro: `ContaService` aplica BCrypt.
-- **E-mail** e **CNPJ** não podem se repetir (mensagem amigável na tela).
-- Cadastro **atômico** (`@Transactional`): Conta + perfil são gravados juntos ou nenhum dos dois.
-- Uma empresa só **vê, edita e apaga a própria** empresa (conferido no `EmpresarialService`).
-  Tentar acessar a de outra devolve erro 403.
-- Apagar a empresa apaga também a conta de login e encerra a sessão.
-- `indiceVegFriendly` **não é editável** por formulário (no diagrama ele é calculado).
-
-## Rotas
-
-| URL | Método | Acesso | O que faz |
-|---|---|---|---|
-| `/usuarioCTR/formCadastrarUsuario` | GET | Público | Tela de cadastro de pessoa |
-| `/usuarioCTR/salvarUsuario` | POST | Público | Cria Conta + Usuario |
-| `/usuarioCTR/login` | GET | Público | Tela de login |
-| `/login` | POST | Público | Processado pelo Spring Security |
-| `/logout` | POST | Logado | Sai do sistema |
-| `/empresarialCTR/formCadastrarEmpresa` | GET | Público | Tela de cadastro de empresa |
-| `/empresarialCTR/salvarEmpresa` | POST | Público | Cria Conta (EMPRESA) + Empresarial |
-| `/empresarialCTR/listarEmpresas` | GET | Logado | Lista as empresas |
-| `/empresarialCTR/minhaEmpresa` | GET | EMPRESA | Atalho para editar a própria empresa |
-| `/empresarialCTR/editarEmpresa/{id}` | GET | EMPRESA (dona) | Formulário de edição |
-| `/empresarialCTR/alterarEmpresa/{id}` | POST | EMPRESA (dona) | Salva a edição |
-| `/empresarialCTR/deletarEmpresa/{id}` | POST | EMPRESA (dona) | Apaga empresa e conta |
-
-Depois do login: conta **EMPRESA** vai para `/empresarialCTR/minhaEmpresa`;
-conta **USUARIO** vai para `/empresarialCTR/listarEmpresas`.
-
-## Contrato das telas (para quem for criar o HTML)
-
-As telas ficam em `src/main/resources/templates/` e **ainda não existem**. Cada uma deve ter:
-
-| Arquivo | Objeto / dados | Campos (`th:field`) ou ação |
-|---|---|---|
-| `login.html` | — | `<form method="post" th:action="@{/login}">` com campos `username` (o e-mail) e `password`; mensagens para `?error`, `?logout`, `?cadastrado` |
-| `cadastrarUsuario.html` | `th:object="${usuario}"` | `nome`, `email`, `password`, `dataNascimento`, `perfilAlimentar`, `latitude`, `longitude`; ação `@{/usuarioCTR/salvarUsuario}`; mostrar `${erro}` |
-| `cadastrarEmpresa.html` | `th:object="${empresarial}"` | `email`, `password`, `cnpj`, `nomeFantasia`, `razaoSocial`, `endereco`, `telefone`, `latitude`, `longitude`, `tipoEspecializacao`; ação `@{/empresarialCTR/salvarEmpresa}`; mostrar `${erro}` |
-| `listarEmpresas.html` | `${empresas}` | percorrer a lista com `th:each` |
-| `editarEmpresa.html` | `th:object="${empresarial}"`, `${empresaId}` | `nomeFantasia`, `razaoSocial`, `endereco`, `telefone`, `latitude`, `longitude`, `tipoEspecializacao`; ação `@{/empresarialCTR/alterarEmpresa/{id}(id=${empresaId})}`; botão de excluir = **form POST** para `@{/empresarialCTR/deletarEmpresa/{id}(id=${empresaId})}` |
-
-Use sempre `th:action` nos formulários: com ele o Thymeleaf inclui o token CSRF
-automaticamente (a proteção CSRF está **ativa**). O botão "Sair" também precisa ser um
-formulário POST para `/logout`.
 
 ## Como rodar
 
