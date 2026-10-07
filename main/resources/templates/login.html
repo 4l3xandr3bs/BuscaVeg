@@ -7,11 +7,10 @@
 
     <title>BuscaVeg - Login</title>
 
-    <link rel="stylesheet" href="/css/estilo.css">
+    <link rel="stylesheet" href="/login.css">
 </head>
 
 <body>
-
     <div class="login-container">
 
         <div class="logo">
@@ -24,36 +23,33 @@
             Encontre opções vegetarianas e veganas perto de você.
         </p>
 
-        <form>
+        <form th:action="@{/login}" method="post">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 
-            <label>Username</label>
+            <label for="username">E-mail</label>
             <input
-                type="text"
-                name="username"
-                placeholder="Digite seu username">
-
-            <label>E-mail</label>
-            <input
+                id="username"
                 type="email"
-                name="email"
-                placeholder="Digite seu e-mail">
+                name="username"
+                placeholder="Digite seu e-mail"
+                required>
 
-            <label>Senha</label>
+            <label for="password">Senha</label>
             <input
+                id="password"
                 type="password"
-                name="senha"
-                placeholder="Digite sua senha">
+                name="password"
+                placeholder="Digite sua senha"
+                required>
 
-            <label>Role</label>
-            <select name="role">
+            <button type="submit">Entrar</button>
+        </form>
 
-                <option value="">
-                    Selecione seu tipo de usuário
-                </option>
+        <p class="register">
+            Ainda não tem conta?
+            <a th:href="@{/usuarioCTR/cadastro}">Cadastre-se</a>
+        </p>
+    </div>
+</body>
 
-                <option value="usuario">
-                    Usuário
-                </option>
-
-                <option value="estabelecimento">
-```
+</html>
