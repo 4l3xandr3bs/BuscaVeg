@@ -12,7 +12,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
-
+import java.util.ArrayList;
+import java.util.List;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToMany;
 /**
  * ENTIDADE EMPRESARIAL = o PERFIL de um ESTABELECIMENTO (restaurante ou
  * mercado) cadastrado no BuscaVeg. É o que as pessoas vão encontrar na busca.
@@ -65,4 +68,6 @@ public class Empresarial {
     @JoinColumn(name = "id_conta", nullable = false)
     private Conta conta;
 
+  @OneToMany(mappedBy = "empresarial", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Avaliacao> avaliacoes = new ArrayList<>();
 }
