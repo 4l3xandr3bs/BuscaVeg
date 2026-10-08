@@ -10,9 +10,7 @@ import buscaveg.com.br.BuscaVeg.Enum.EnumTipoConta;
 import buscaveg.com.br.BuscaVeg.Excecao.RegraDeNegocioException;
 import buscaveg.com.br.BuscaVeg.Repository.UsuarioRepository;
 
-/**
- * Regras de negócio do USUÁRIO (perfil da pessoa que busca lugares).
- */
+
 @Service
 public class UsuarioService {
 
@@ -27,17 +25,9 @@ public class UsuarioService {
         this.oContaService = oContaService;
     }
 
-    /**
-     * Cadastra uma pessoa: cria a Conta (login) e depois o Usuario (perfil).
-     *
-     * @Transactional faz as duas gravações valerem juntas: se salvar o Usuario
-     * falhar, a Conta criada um passo antes é desfeita (rollback). Sem isso,
-     * ficaria uma conta de login sem perfil no banco.
-     */
     @Transactional
     public Usuario cadastrarUsuario(CadastroUsuarioDTO dto) {
 
-        // Valida antes de mexer no banco.
         if (dto.getNome() == null || dto.getNome().isBlank()) {
             throw new RegraDeNegocioException("O nome é obrigatório.");
         }
@@ -48,14 +38,14 @@ public class UsuarioService {
             throw new RegraDeNegocioException("Escolha um perfil alimentar.");
         }
 
-        // 1) Cria a Conta (criptografa a senha e recusa e-mail repetido).
+       
         Conta conta = oContaService.cadastrarConta(
                 dto.getEmail(),
                 dto.getPassword(),
                 EnumTipoConta.USUARIO
         );
 
-        // 2) Cria o perfil e liga à Conta.
+
         Usuario usuario = new Usuario();
 
         usuario.setNome(dto.getNome().trim());
@@ -67,4 +57,11 @@ public class UsuarioService {
 
         return oUsuarioRepository.save(usuario);
     }
+    public Usuario buscarPorEmail(String email) {
+    Conta conta = contaRepository.findByEmail(email)
+        .orElseThrow(() -> new RegraDeNegocioException("Usuário não encontrado"));
+    
+    return oUsuarioRepository.findByConta(conta)
+        .orElseThrow(() -> new RegraDeNegocioException("Perfil de usuário não encontrado"));
+}
 }

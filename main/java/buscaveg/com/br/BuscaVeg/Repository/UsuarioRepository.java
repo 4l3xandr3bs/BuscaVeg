@@ -12,5 +12,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
   
     List<Usuario> findByPerfilAlimentar(EnumPerfilAlimentar perfilAlimentar);
-
+    Optional<Usuario> findByConta(Conta conta);
 }

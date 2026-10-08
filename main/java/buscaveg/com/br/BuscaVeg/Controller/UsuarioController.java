@@ -21,27 +21,16 @@ public class UsuarioController {
     public UsuarioController(UsuarioService oUsuarioService) {
         this.oUsuarioService = oUsuarioService;
     }
-
-    // GET /usuarioCTR/formCadastrarUsuario
-    // Exibe a tela de cadastro do usuário.
-    // Enviamos um DTO vazio para a tela: o formulário HTML usa esse objeto
-    // para saber quais campos preencher (nome, e-mail, senha, perfil...).
     @GetMapping("/cadastro")
     public String telaCadastraUsuario(Model oModel) {
 
-        // Model é a "caixa" que leva dados do Java até o HTML.
-        // Na tela, o objeto fica disponível com o nome "usuario".
+       
         oModel.addAttribute("usuario", new CadastroUsuarioDTO());
 
-        return "cadastrarUsuario"; // abre templates/cadastrarUsuario.html
+        return "cadastro.html"; 
     }
 
-    // GET /usuarioCTR/login
-    // Apenas exibe a tela de login. O processamento do login (conferir
-    // e-mail e senha) NÃO é feito aqui: quem faz isso é o Spring Security,
-    // configurado em SecurityConfig.
-    // A tela pode receber ?error (login errado), ?logout (saiu) ou
-    // ?cadastrado (acabou de se cadastrar) para exibir a mensagem adequada.
+  
     @GetMapping("/login")
     public String telaLogin() {
 

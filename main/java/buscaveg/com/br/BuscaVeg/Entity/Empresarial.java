@@ -16,16 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.OneToMany;
-/**
- * ENTIDADE EMPRESARIAL = o PERFIL de um ESTABELECIMENTO (restaurante ou
- * mercado) cadastrado no BuscaVeg. É o que as pessoas vão encontrar na busca.
- *
- * Assim como Usuario, o login desta empresa fica em uma Conta (@OneToOne).
- *
- * Itens do diagrama de classes que ainda NÃO existem aqui (próximas etapas):
- * horário de funcionamento, protocoloRestricoes, nota média, ItemCardapio,
- * StatusDeTempoReal e Avaliacao. Veja a tabela "Diagrama x código" no README.
- */
 @Entity
 @Table(name = "empresarial")
 @Data
