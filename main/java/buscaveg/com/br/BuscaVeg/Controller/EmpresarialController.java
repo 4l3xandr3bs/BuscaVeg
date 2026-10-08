@@ -37,7 +37,7 @@ public class EmpresarialController {
 
         oModel.addAttribute("empresarial", new CadastroEmpresarialDTO());
 
-        return "cadastrarEmpresa"; // templates/cadastrarEmpresa.html
+        return "cadastro"; // templates/cadastrarEmpresa.html
     }
 
     
@@ -52,7 +52,7 @@ public class EmpresarialController {
         } catch (RegraDeNegocioException e) {
             
             oModel.addAttribute("erro", e.getMessage());
-            return "cadastrarEmpresa";
+            return "cadastro";
         }
 
         return "redirect:/usuarioCTR/login?cadastrado";
@@ -67,7 +67,7 @@ public class EmpresarialController {
                 oEmpresarialService.listarTodasEmpresas()
         );
 
-        return "listarEmpresas"; // templates/listarEmpresas.html
+        return "lugares"; // templates/listarEmpresas.html
     }
 
     // GET /empresarialCTR/minhaEmpresa
@@ -127,7 +127,7 @@ public class EmpresarialController {
         return "redirect:/empresarialCTR/listarEmpresas";
     }
 
-    // POST /empresarialCTR/deletarEmpresa/{id}
+    // POST /empresarialCTR/detarEmpresa/{id}
     // Apaga a empresa e a conta dela.
     // IMPORTANTE: é POST, não GET. Um link GET que apaga dados pode ser
     // disparado sem querer (por exemplo, por um robô ou um site malicioso).
