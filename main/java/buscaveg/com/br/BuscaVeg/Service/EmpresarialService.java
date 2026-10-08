@@ -193,7 +193,7 @@ public class EmpresarialService {
         oContaService.excluirConta(conta);
     }
 
-    // ---------- métodos auxiliares de validação (uso interno) ----------
+
 
     private void exigirPreenchido(String valor, String nomeDoCampo) {
 
