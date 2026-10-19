@@ -1,0 +1,155 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  }
+
+body {
+font-family: Arial, sans-serif;
+background: #f5f7f5;
+color: #333;
+min-height: 100vh;
+}
+
+header {
+height: 75px;
+background: white;
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 0 8%;
+box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+header .logo {
+color: #2e7d32;
+font-size: 25px;
+font-weight: bold;
+}
+
+nav {
+display: flex;
+gap: 30px;
+}
+
+nav a {
+color: #555;
+text-decoration: none;
+font-weight: bold;
+}
+
+nav a:hover {
+color: #2e7d32;
+}
+
+main {
+display: flex;
+justify-content: center;
+padding: 50px 20px;
+}
+
+.cadastro-container {
+width: 500px;
+max-width: 100%;
+background: white;
+padding: 40px;
+border-radius: 20px;
+box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+}
+
+.cadastro-container > .logo {
+text-align: center;
+font-size: 55px;
+margin-bottom: 10px;
+}
+
+.cadastro-container h1 {
+color: #2e7d32;
+text-align: center;
+font-size: 32px;
+margin-bottom: 10px;
+}
+
+.subtitle {
+color: #777;
+text-align: center;
+margin-bottom: 30px;
+line-height: 1.5;
+}
+
+.cadastro-container form {
+display: flex;
+flex-direction: column;
+}
+
+.cadastro-container label {
+margin-bottom: 7px;
+color: #333;
+font-weight: bold;
+}
+
+.cadastro-container input,
+.cadastro-container select {
+width: 100%;
+padding: 13px;
+margin-bottom: 18px;
+border: 1px solid #ccc;
+border-radius: 8px;
+font-size: 15px;
+}
+
+.cadastro-container input:focus,
+.cadastro-container select:focus {
+outline: none;
+border-color: #43a047;
+}
+
+.cadastro-container button {
+width: 100%;
+padding: 14px;
+border: none;
+border-radius: 8px;
+background: #43a047;
+color: white;
+font-size: 16px;
+font-weight: bold;
+cursor: pointer;
+margin-top: 5px;
+}
+
+.cadastro-container button:hover {
+background: #2e7d32;
+}
+
+.login-link {
+text-align: center;
+margin-top: 25px;
+color: #777;
+}
+
+.login-link a {
+color: #2e7d32;
+font-weight: bold;
+text-decoration: none;
+}
+
+.login-link a:hover {
+text-decoration: underline;
+}
+
+@media (max-width: 800px) {
+
+
+header {
+    padding: 0 5%;
+}
+
+nav {
+    display: none;
+}
+
+.cadastro-container {
+    padding: 30px 25px;
+}
+
+}
