@@ -63,21 +63,24 @@
 
         <label for="Endereço">Endereço</label>
         <input
-            id="latitude"
-            type="number"
+            id=""
+            type=""
             step="any"
-            th:field="*{latitude}">
+            th:field="">
 
         <button type="submit">
             Criar conta
         </button>
     </form>
-
+      
     <p class="login-link">
         Já possui uma conta?
         <a th:href="@{/usuarioCTR/login}">Entrar</a>
     </p>
-
+      <p class="">
+        Quer cadastrar uma empresa?
+        <a th:href="@{}">registrar sua empresa</a>
+      </p>
 </div>
 
 </body>

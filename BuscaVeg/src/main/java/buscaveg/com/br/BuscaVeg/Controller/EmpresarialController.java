@@ -50,7 +50,7 @@ public class EmpresarialController {
 
         oModel.addAttribute("empresarial", new CadastroEmpresarialDTO());
 
-        return "cadastrarEmpresa"; // templates/cadastrarEmpresa.html
+        return "templates/editaEmpresa.html"; // templates/cadastrarEmpresa.html
     }
 
     // POST /empresarialCTR/salvarEmpresa
@@ -119,7 +119,7 @@ public class EmpresarialController {
                 oEmpresarialService.montarDtoDeEdicao(empresa)
         );
 
-        return "editarEmpresa"; // templates/editarEmpresa.html
+        return "templates/editaEmpresa.html"; // templates/editarEmpresa.html
     }
 
     // POST /empresarialCTR/alterarEmpresa/{id}
