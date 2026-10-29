@@ -13,21 +13,8 @@ import lombok.Data;
 /**
  * ENTIDADE CONTA = as CREDENCIAIS DE ACESSO ao sistema (e-mail + senha).
  *
- * Ideia central do projeto: em vez de guardar e-mail e senha dentro de cada
- * tipo de perfil, existe UMA tabela só para o login (esta). Quem tem um
- * perfil (Usuario ou Empresarial) aponta para uma Conta. Assim, o login
- * funciona igual para pessoas e para empresas.
- *
- *   Conta  <--- Usuario       (pessoa que busca lugares veganos)
- *   Conta  <--- Empresarial   (restaurante ou mercado)
- *
- * Regra: cada Conta pertence a UM perfil só (Usuario OU Empresarial). O campo
- * "tipo" diz qual. Quem garante isso é a camada Service, não o banco.
- *
- * @Entity -> cada objeto desta classe vira uma linha na tabela "conta".
- * @Data   -> (Lombok) gera sozinho getters, setters, toString, equals e
- *            hashCode. Por isso não há getEmail()/setEmail() escritos aqui,
- *            mas eles existem e são usados em outras classes.
+ * @Entity 
+ * @Data   
  */
 @Entity
 @Data

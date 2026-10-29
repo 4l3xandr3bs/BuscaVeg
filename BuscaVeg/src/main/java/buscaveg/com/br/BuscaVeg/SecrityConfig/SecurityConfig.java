@@ -53,11 +53,6 @@ public class SecurityConfig {
                     "/error"
                 ).permitAll()
 
-                // 2) Área da empresa: só contas do tipo EMPRESA.
-                //    hasRole("EMPRESA") corresponde ao papel ROLE_EMPRESA
-                //    criado no CustomUserDetailService a partir de Conta.tipo.
-                //    (Dentro do Service ainda se confere se a empresa é a
-                //    DA PESSOA logada, para uma empresa não mexer na outra.)
                 .requestMatchers(
                     "/empresarialCTR/minhaEmpresa",
                     "/empresarialCTR/editarEmpresa/**",

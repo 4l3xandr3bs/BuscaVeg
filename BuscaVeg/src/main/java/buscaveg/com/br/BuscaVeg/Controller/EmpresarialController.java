@@ -50,7 +50,7 @@ public class EmpresarialController {
 
         oModel.addAttribute("empresarial", new CadastroEmpresarialDTO());
 
-        return "templates/editaEmpresa.html"; // templates/cadastrarEmpresa.html
+        return "templates/cadastroEmp.html"; // templates/cadastrarEmpresa.html
     }
 
     // POST /empresarialCTR/salvarEmpresa
@@ -70,7 +70,7 @@ public class EmpresarialController {
             return "cadastrarEmpresa";
         }
 
-        return "redirect:/usuarioCTR/login?cadastrado";
+        return "redirect:/empresarialCTR/login?cadastrado";
     }
 
     // GET /empresarialCTR/listarEmpresas
@@ -160,6 +160,6 @@ public class EmpresarialController {
         // continuar "logada" com uma conta que não existe mais.
         request.logout();
 
-        return "redirect:/usuarioCTR/login";
+        return "redirect:/empresarialCTR/login";
     }
 }
