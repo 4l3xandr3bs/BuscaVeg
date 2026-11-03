@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BuscaVeg - Cadastro</title>
+    <title>BuscaVeg - Cadastro da Empresa</title>
     <link rel="stylesheet" href="/css/cadastro.css">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-
 </head>
 <body>
 
@@ -14,73 +12,90 @@
 
     <div class="logo">🥗</div>
 
-    <h1>Crie sua conta</h1>
+    <h1>Cadastre sua empresa</h1>
 
     <p class="subtitle">
-        Cadastre sua empresa aqui!
+        Cadastre seu local com endereço para aparecer no mapa.
     </p>
 
-    <form th:action="@{/empresarialCTR/salvarUsuario}" th:object="${usuario}" method="post">
+    <form th:action="@{/empresarialCTR/salvarEmpresa}" th:object="${empresarial}" method="post">
+
         <div th:if="${erro}" class="alert" th:text="${erro}"></div>
 
-        <label for="nome">Nome da empresa</label>
-        <input
-            id="nome"
-            type="text"
-            th:field="*{nome_fantasia}"
-            placeholder="Digite o nome da sua empresa"
-            required>
+        <label for="nomeFantasia">Nome da empresa</label>
+        <input id="nomeFantasia" type="text" th:field="*{nomeFantasia}" required>
 
-        <label for="email">Razão Social</label>
-        <input
-            id="email"
-            type="email"
-            th:field="*{email}"
-            placeholder="fale um pouco sobre sua empresa"
-            required>
+        <label for="razaoSocial">Razão social</label>
+        <input id="razaoSocial" type="text" th:field="*{razaoSocial}" required>
+
+        <label for="email">E-mail</label>
+        <input id="email" type="email" th:field="*{email}" required>
 
         <label for="password">Senha</label>
-        <input
-            id="password"
-            type="password"
-            th:field="*{password}"
-            placeholder="Digite sua senha"
-            required>
+        <input id="password" type="password" th:field="*{password}" required>
 
-        <label for="perfilAlimentar">Tipo de alimentação</label>
-        <select id="perfilAlimentar" th:field="*{perfilAlimentar}" required>
+        <label for="cnpj">CNPJ</label>
+        <input id="cnpj" type="text" th:field="*{cnpj}" required>
+
+        <label for="telefone">Telefone</label>
+        <input id="telefone" type="text" th:field="*{telefone}" required>
+
+        <label for="tipoEspecializacao">Tipo de estabelecimento</label>
+        <select id="tipoEspecializacao" th:field="*{tipoEspecializacao}" required>
             <option value="">Selecione</option>
-            <option value="VEGETARIANO">Vegetariano</option>
-            <option value="VEGANO">Vegano</option>
+            <option value="RESTAURANTE">Restaurante</option>
+            <option value="MERCADO">Mercado</option>
         </select>
 
-        <label for="dataNascimento">Data de nascimento</label>
-        <input
-            id="dataNascimento"
-            type="date"
-            th:field="*{dataNascimento}">
+        <label for="endereco">Endereço completo</label>
+        <input id="endereco" type="text" th:field="*{endereco}" placeholder="Rua, número, bairro, cidade" required>
 
-        <label for="Endereço">Endereço</label>
-        <input
-            id=""
-            type=""
-            step="any"
-            th:field="">
+        <input type="hidden" id="latitude" th:field="*{latitude}">
+        <input type="hidden" id="longitude" th:field="*{longitude}">
 
         <button type="submit">
             Criar conta
         </button>
     </form>
-      
-    <p class="login-link">
-        Já possui uma conta?
-        <a th:href="@{/usuarioCTR/login}">Entrar</a>
-    </p>
-      <p class="">
-        Quer cadastrar uma empresa?
-        <a th:href="@{}">registrar sua empresa</a>
-      </p>
+
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+        const enderecoInput = document.getElementById("endereco");
+        const latInput = document.getElementById("latitude");
+        const lngInput = document.getElementById("longitude");
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const endereco = enderecoInput.value.trim();
+
+            if (!endereco) {
+                alert("Informe o endereço.");
+                return;
+            }
+
+            fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&q=${encodeURIComponent(endereco)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (!data || data.length === 0) {
+                        alert("Endereço não encontrado.");
+                        return;
+                    }
+
+                    latInput.value = data[0].lat;
+                    lngInput.value = data[0].lon;
+
+                    form.submit();
+                })
+                .catch(() => {
+                    alert("Erro ao geocodificar endereço.");
+                });
+        });
+    });
+</script>
 
 </body>
 </html>

@@ -28,16 +28,17 @@ public class EmpresarialService {
 
     private final EmpresarialRepository oEmpresarialRepository;
     private final ContaService oContaService;
+    private final GeoService oGeoService;
 
     public EmpresarialService(
             EmpresarialRepository oEmpresarialRepository,
-            ContaService oContaService) {
+            ContaService oContaService, GeoService oGeoService) {
 
         this.oEmpresarialRepository = oEmpresarialRepository;
         this.oContaService = oContaService;
+        this.oGeoService = oGeoService;
     }
 
-    // Busca uma empresa pelo id. Se não existir, responde 404 (página não encontrada).
     public Empresarial buscarEmpresarialPorId(Long id) {
 
         return oEmpresarialRepository.findById(id)
@@ -49,7 +50,6 @@ public class EmpresarialService {
                 );
     }
 
-    // Descobre qual é a empresa da pessoa logada, a partir do e-mail dela.
     public Empresarial buscarPorEmailDaConta(String email) {
 
         return oEmpresarialRepository.findByContaEmail(email)
@@ -66,13 +66,7 @@ public class EmpresarialService {
         return oEmpresarialRepository.findAll();
     }
 
-    /**
-     * Busca a empresa pelo id E confere se ela pertence a quem está logado.
-     * Sem essa conferência, qualquer pessoa logada poderia editar ou apagar a
-     * empresa de outra só trocando o número na URL (/editarEmpresa/7 -> /8).
-     *
-     * @throws AccessDeniedException se a empresa for de outra conta (vira erro 403)
-     */
+ 
     public Empresarial buscarEmpresaDoLogado(Long id, String emailLogado) {
 
         Empresarial empresa = buscarEmpresarialPorId(id);
@@ -85,8 +79,6 @@ public class EmpresarialService {
         return empresa;
     }
 
-    // Converte a empresa salva nos dados do formulário de edição
-    // (para a tela já abrir preenchida com os valores atuais).
     public AlterarEmpresarialDTO montarDtoDeEdicao(Empresarial empresa) {
 
         AlterarEmpresarialDTO dto = new AlterarEmpresarialDTO();
@@ -102,10 +94,7 @@ public class EmpresarialService {
         return dto;
     }
 
-    /**
-     * Cadastra uma empresa: cria a Conta (tipo EMPRESA) e depois a Empresarial.
-     * @Transactional: se qualquer passo falhar, nada fica gravado.
-     */
+
     @Transactional
     public Empresarial cadastrarEmpresa(CadastroEmpresarialDTO dto) {
 
@@ -124,14 +113,13 @@ public class EmpresarialService {
                 "Já existe uma empresa cadastrada com este CNPJ.");
         }
 
-        // 1) Cria a Conta de login (senha criptografada, e-mail único).
         Conta conta = oContaService.cadastrarConta(
                 dto.getEmail(),
                 dto.getPassword(),
                 EnumTipoConta.EMPRESA
         );
 
-        // 2) Cria o perfil do estabelecimento e liga à Conta.
+    
         Empresarial empresa = new Empresarial();
 
         empresa.setCnpj(dto.getCnpj().trim());
@@ -147,10 +135,7 @@ public class EmpresarialService {
         return oEmpresarialRepository.save(empresa);
     }
 
-    /**
-     * Altera os dados da empresa. Só altera o que o AlterarEmpresarialDTO
-     * permite: CNPJ, conta e índice veg-friendly NÃO mudam por aqui.
-     */
+    
     @Transactional
     public Empresarial alterarEmpresa(
             Long id,
@@ -178,11 +163,6 @@ public class EmpresarialService {
         return oEmpresarialRepository.save(empresa);
     }
 
-    /**
-     * Apaga a empresa E a conta de login dela (para não sobrar conta órfã).
-     * A ordem importa: primeiro a Empresarial (que depende da Conta),
-     * depois a Conta.
-     */
     @Transactional
     public void deletarEmpresa(Long id, String emailLogado) {
 
@@ -193,7 +173,7 @@ public class EmpresarialService {
         oContaService.excluirConta(conta);
     }
 
-    // ---------- métodos auxiliares de validação (uso interno) ----------
+   
 
     private void exigirPreenchido(String valor, String nomeDoCampo) {
 

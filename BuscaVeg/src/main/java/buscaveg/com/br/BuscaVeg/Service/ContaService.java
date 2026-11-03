@@ -24,14 +24,16 @@ public class ContaService {
 
     private final ContaRepository oContaRepository;
     private final PasswordEncoder encoder;
+    private final GeoService oGeoService;
 
     // Dependências entregues pelo Spring (injeção via construtor).
     public ContaService(
             ContaRepository oContaRepository,
-            PasswordEncoder encoder) {
+            PasswordEncoder encoder, GeoService oGeoService) {
 
         this.oContaRepository = oContaRepository;
         this.encoder = encoder;
+        this.oGeoService = oGeoService;
     }
 
     /**
