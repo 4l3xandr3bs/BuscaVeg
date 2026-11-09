@@ -25,7 +25,7 @@ public class ApiController {
     public List<Map<String, Object>> listarProximos(
             @RequestParam double lat,
             @RequestParam double lng,
-            @RequestParam(defaultValue = "5") double raioKm) {
+            @RequestParam(defaultValue = "10") double raioKm) {
 
         List<Empresarial> empresas = empresarialRepository.findAll();
         List<Map<String, Object>> resultado = new ArrayList<>();
@@ -36,14 +36,13 @@ public class ApiController {
             }
 
             double distancia = calcularDistanciaKm(lat, lng, empresa.getLatitude(), empresa.getLongitude());
-
             if (distancia <= raioKm) {
                 Map<String, Object> item = new HashMap<>();
                 item.put("id", empresa.getId());
                 item.put("nome", empresa.getNomeFantasia());
                 item.put("endereco", empresa.getEndereco());
                 item.put("telefone", empresa.getTelefone());
-                item.put("tipo", empresa.getTipoEspecializacao().name());
+                item.put("tipo", empresa.getTipoEspecializacao() != null ? empresa.getTipoEspecializacao().name() : "");
                 item.put("latitude", empresa.getLatitude());
                 item.put("longitude", empresa.getLongitude());
                 resultado.add(item);
@@ -54,7 +53,7 @@ public class ApiController {
     }
 
     private double calcularDistanciaKm(double lat1, double lon1, double lat2, double lon2) {
-        final double r = 6371.0;
+        final double raioTerra = 6371.0;
 
         double dLat = Math.toRadians(lat2 - lat1);
         double dLon = Math.toRadians(lon2 - lon1);
@@ -64,7 +63,6 @@ public class ApiController {
                 * Math.sin(dLon / 2) * Math.sin(dLon / 2);
 
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-        return r * c;
+        return raioTerra * c;
     }
 }

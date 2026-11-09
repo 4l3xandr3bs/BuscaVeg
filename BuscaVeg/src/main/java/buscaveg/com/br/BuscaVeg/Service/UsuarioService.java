@@ -33,17 +33,17 @@ public class UsuarioService {
         if (dto.getNome() == null || dto.getNome().isBlank()) {
             throw new RegraDeNegocioException("O nome é obrigatório.");
         }
-
+        if (dto.getNome().length() > 50) {
+            throw new RegraDeNegocioException("O nome deve ter no máximo 50 caracteres.");
+        }
         if (dto.getPerfilAlimentar() == null) {
             throw new RegraDeNegocioException("Escolha um perfil alimentar.");
         }
-
         if (dto.getEndereco() == null || dto.getEndereco().isBlank()) {
-            throw new RegraDeNegocioException("Informe seu endereço para usar o mapa.");
+            throw new RegraDeNegocioException("Informe o endereço para localizar sua posição.");
         }
 
         double[] coords = geoService.geocodeAddress(dto.getEndereco());
-
         dto.setLatitude(coords[0]);
         dto.setLongitude(coords[1]);
 

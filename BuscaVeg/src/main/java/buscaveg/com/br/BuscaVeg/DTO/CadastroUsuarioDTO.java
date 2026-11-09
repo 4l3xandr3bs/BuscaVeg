@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import buscaveg.com.br.BuscaVeg.Enum.EnumPerfilAlimentar;
 import lombok.Data;
 
-
 @Data
 public class CadastroUsuarioDTO {
 
@@ -18,6 +17,8 @@ public class CadastroUsuarioDTO {
     private LocalDate dataNascimento;
 
     private EnumPerfilAlimentar perfilAlimentar;
+
+    private String endereco;
 
     private Double latitude;
 

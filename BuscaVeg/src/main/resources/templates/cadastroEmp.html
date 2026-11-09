@@ -9,17 +9,12 @@
 <body>
 
 <div class="cadastro-container">
-
     <div class="logo">🥗</div>
 
     <h1>Cadastre sua empresa</h1>
-
-    <p class="subtitle">
-        Cadastre seu local com endereço para aparecer no mapa.
-    </p>
+    <p class="subtitle">Cadastre seu local com endereço para aparecer no mapa.</p>
 
     <form th:action="@{/empresarialCTR/salvarEmpresa}" th:object="${empresarial}" method="post">
-
         <div th:if="${erro}" class="alert" th:text="${erro}"></div>
 
         <label for="nomeFantasia">Nome da empresa</label>
@@ -53,27 +48,23 @@
         <input type="hidden" id="latitude" th:field="*{latitude}">
         <input type="hidden" id="longitude" th:field="*{longitude}">
 
-        <button type="submit">
-            Criar conta
-        </button>
+        <button type="submit">Criar conta</button>
     </form>
-
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const form = document.querySelector("form");
-        const enderecoInput = document.getElementById("endereco");
-        const latInput = document.getElementById("latitude");
-        const lngInput = document.getElementById("longitude");
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('form');
+        const enderecoInput = document.getElementById('endereco');
+        const latInput = document.getElementById('latitude');
+        const lngInput = document.getElementById('longitude');
 
-        form.addEventListener("submit", function (event) {
+        form.addEventListener('submit', function (event) {
             event.preventDefault();
 
             const endereco = enderecoInput.value.trim();
-
             if (!endereco) {
-                alert("Informe o endereço.");
+                alert('Informe o endereço.');
                 return;
             }
 
@@ -81,17 +72,16 @@
                 .then(res => res.json())
                 .then(data => {
                     if (!data || data.length === 0) {
-                        alert("Endereço não encontrado.");
+                        alert('Endereço não encontrado.');
                         return;
                     }
 
                     latInput.value = data[0].lat;
                     lngInput.value = data[0].lon;
-
                     form.submit();
                 })
                 .catch(() => {
-                    alert("Erro ao geocodificar endereço.");
+                    alert('Erro ao geocodificar endereço.');
                 });
         });
     });
