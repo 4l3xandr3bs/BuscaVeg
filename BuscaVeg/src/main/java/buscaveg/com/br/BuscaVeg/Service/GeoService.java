@@ -23,7 +23,7 @@ public class GeoService {
         }
 
         String url = UriComponentsBuilder
-            .fromHttpUrl("https://nominatim.openstreetmap.org/search")
+            .fromUriString("https://nominatim.openstreetmap.org/search")
             .queryParam("format", "jsonv2")
             .queryParam("limit", "1")
             .queryParam("q", endereco)
