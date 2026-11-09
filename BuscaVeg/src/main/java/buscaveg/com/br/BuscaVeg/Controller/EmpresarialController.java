@@ -18,19 +18,7 @@ import buscaveg.com.br.BuscaVeg.Service.EmpresarialService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 
-/**
- * CONTROLLER DAS EMPRESAS (restaurantes e mercados). Todas as URLs começam
- * com "/empresarialCTR".
- *
- * Quem pode acessar o quê (definido em SecurityConfig):
- *  - cadastro de empresa .......... público (senão ninguém conseguiria se cadastrar);
- *  - lista de empresas ............ qualquer pessoa logada;
- *  - minhaEmpresa / editar / alterar / deletar ... só conta do tipo EMPRESA,
- *    e ainda assim só os dados da PRÓPRIA empresa (conferido no Service).
- *
- * "Principal" é o objeto do Spring que representa QUEM está logado;
- * principal.getName() devolve o e-mail da conta.
- */
+
 @Controller
 @RequestMapping("/empresarialCTR")
 public class EmpresarialController {
@@ -53,8 +41,7 @@ public class EmpresarialController {
         return "templates/cadastroEmp.html"; // templates/cadastrarEmpresa.html
     }
 
-    // POST /empresarialCTR/salvarEmpresa
-    // Recebe o formulário, cria Conta + Empresarial e manda para o login.
+  
     @PostMapping("/salvarEmpresa")
     public String cadastrarEmpresa(
             @ModelAttribute("empresarial") CadastroEmpresarialDTO dto,

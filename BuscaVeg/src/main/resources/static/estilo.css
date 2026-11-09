@@ -7,6 +7,7 @@
      margin: 0;
      padding: 0;
      box-sizing: border-box;
+     
  }
  
  body {
@@ -16,9 +17,7 @@
      min-height: 100vh;
  }
  
- /* ================================================================= *
-  * HEADER E NAVEGAÇÃO
-  * ================================================================= */
+
  header {
      height: 75px;
      background: white;
@@ -348,3 +347,251 @@
          padding: 13px;
      }
  }
+
+ 
+/* =========================================
+   CENTRALIZAÇÃO DO CADASTRO
+========================================= */
+
+body.pagina-cadastro {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 15px;
+    background: #f5f7f5;
+}
+
+.pagina-cadastro .cadastro-container {
+    width: 500px;
+    max-width: 100%;
+    margin: 0 auto;
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+}
+
+.pagina-cadastro .cadastro-container h1 {
+    text-align: center;
+    color: #245c29;
+}
+
+.pagina-cadastro .cadastro-container .logo {
+    text-align: center;
+    font-size: 40px;
+}
+
+.pagina-cadastro .cadastro-container button {
+    width: 100%;
+    padding: 13px;
+    margin-top: 5px;
+}
+
+.pagina-cadastro .cadastro-container input,
+.pagina-cadastro .cadastro-container select {
+    width: 100%;
+}
+
+.pagina-cadastro .cadastro-container a {
+    color: #2e7d32;
+}
+
+.pagina-cadastro .cadastro-container a:hover {
+    color: #245c29;
+}
+
+/* =========================================
+   CENTRALIZAÇÃO DO LOGIN
+========================================= */
+
+body.pagina-login {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 25px 15px;
+}
+
+.pagina-login .login-container {
+    width: 400px;
+    max-width: 100%;
+    margin: auto;
+    padding: 40px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+}
+
+.alert {
+    color: #b00020;
+    margin-bottom: 15px;
+}
+
+.alert-success {
+    color: #237a32;
+    background: #e3f3e4;
+    padding: 10px;
+    border-radius: 7px;
+    margin-bottom: 15px;
+}
+
+#map {
+    height: 400px;
+    width: 100%;
+    margin-top: 25px;
+    border-radius: 12px;
+}
+
+@media (max-width: 550px) {
+    .pagina-cadastro .cadastro-container,
+    .pagina-login .login-container {
+        padding: 25px 20px;
+    }
+}
+
+/* ==========================================
+   CENTRALIZAÇÃO DAS DEMAIS TELAS - BUSCAVEG
+========================================== */
+
+/* Área principal */
+main {
+    width: 90%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Títulos das páginas */
+.hero {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* PERFIL */
+.login-container {
+    margin: 40px auto;
+}
+
+/* FAVORITOS E LUGARES */
+.places {
+    width: 100%;
+    max-width: 1100px;
+    margin: 30px auto;
+}
+
+.places-container {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(260px, 320px));
+    justify-content: center;
+    justify-items: center;
+    gap: 25px;
+}
+
+.place-card {
+    width: 100%;
+    max-width: 320px;
+}
+
+/* CARDÁPIO */
+.menu {
+    width: 100%;
+    max-width: 1100px;
+    margin: 30px auto;
+}
+
+.menu-container {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(280px, 350px));
+    justify-content: center;
+    gap: 25px;
+}
+
+.menu-card {
+    width: 100%;
+}
+
+/* AVALIAÇÕES */
+.reviews {
+    width: 100%;
+    max-width: 850px;
+    margin: 30px auto;
+}
+
+.review-form {
+    width: 100%;
+    max-width: 700px;
+    margin: 25px auto;
+}
+
+.review-card {
+    width: 100%;
+    margin: 20px auto;
+}
+
+/* PEDIDOS */
+.orders {
+    width: 100%;
+    max-width: 900px;
+    margin: 30px auto;
+}
+
+.order-card {
+    width: 100%;
+    margin: 20px auto;
+}
+
+/* CONFIGURAÇÕES */
+.settings-container {
+    width: 100%;
+    max-width: 850px;
+    margin: 30px auto;
+}
+
+.settings-section {
+    width: 100%;
+    margin: 20px auto;
+}
+
+/* INFORMAÇÕES DO RESTAURANTE */
+.restaurant-info {
+    width: 100%;
+    max-width: 850px;
+    margin: 25px auto;
+}
+
+/* CATEGORIAS */
+.categories {
+    width: 100%;
+    max-width: 1100px;
+    margin: 30px auto;
+    text-align: center;
+}
+
+.category-container {
+    justify-content: center;
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 600px) {
+
+    main {
+        width: 95%;
+    }
+
+    .places-container,
+    .menu-container {
+        grid-template-columns: 1fr;
+    }
+
+    .settings-container,
+    .reviews,
+    .orders {
+        width: 100%;
+        padding: 10px;
+    }
+
+}
