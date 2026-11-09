@@ -23,6 +23,7 @@ public class SecurityConfig {
                                 "/empresarialCTR/salvarEmpresa",
                                 "/css/**",
                                 "/js/**",
+                                "/estilo.css",
                                 "/error")
                         .permitAll()
 

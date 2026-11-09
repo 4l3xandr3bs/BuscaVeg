@@ -25,17 +25,13 @@ public class UsuarioController {
         this.oUsuarioService = oUsuarioService;
     }
 
-    // GET /usuarioCTR/formCadastrarUsuario
-    // Exibe a tela de cadastro do usuário.
-    // Enviamos um DTO vazio para a tela: o formulário HTML usa esse objeto
-    // para saber quais campos preencher (nome, e-mail, senha, perfil...).
     @GetMapping("/formCadastrarUsuario")
     public String telaCadastraUsuario(Model oModel) {
 
    
         oModel.addAttribute("usuario", new CadastroUsuarioDTO());
 
-        return "cadastro"; // abre templates/cadastrarUsuario.html
+        return "templates/cadastro.html"; // abre templates/cadastrarUsuario.html
     }
 
     
@@ -56,15 +52,12 @@ public class UsuarioController {
             oUsuarioService.cadastrarUsuario(dto);
 
         } catch (RegraDeNegocioException e) {
-            // Erro causado pelo preenchimento (e-mail repetido, campo vazio...):
-            // volta para o MESMO formulário, mantendo o que a pessoa digitou,
-            // e mostra a mensagem em "erro".
+      
             oModel.addAttribute("erro", e.getMessage());
-            return "cadastrarUsuario";
+            return "cadastro";
         }
 
-        // Cadastro feito: leva para o login (padrão "Post/Redirect/Get":
-        // evita reenviar o formulário se a pessoa apertar F5).
+
         return "redirect:/usuarioCTR/login?cadastrado";
     }
 }

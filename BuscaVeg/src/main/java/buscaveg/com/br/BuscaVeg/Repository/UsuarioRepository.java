@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+import java.util.Optional;
 /**
  * Acesso ao banco para a entidade Usuario.
  * Os métodos básicos (save, findAll, findById...) já vêm de JpaRepository.
@@ -14,9 +14,7 @@ import java.util.List;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
-    // Lista todos os usuários de um perfil alimentar.
-    // Ex.: findByPerfilAlimentar(EnumPerfilAlimentar.VEGANO)
-    //      => SELECT * FROM usuario WHERE perfil_alimentar = 'VEGANO'
-    List<Usuario> findByPerfilAlimentar(EnumPerfilAlimentar perfilAlimentar);
 
+    List<Usuario> findByPerfilAlimentar(EnumPerfilAlimentar perfilAlimentar);
+    Optional<Usuario> findByContaEmail(String email);
 }

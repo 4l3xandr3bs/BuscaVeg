@@ -38,7 +38,7 @@ public class EmpresarialController {
 
         oModel.addAttribute("empresarial", new CadastroEmpresarialDTO());
 
-        return "templates/cadastroEmp.html"; // templates/cadastrarEmpresa.html
+        return "cadastroEmp"; // templates/cadastrarEmpresa.html
     }
 
   
@@ -70,7 +70,7 @@ public class EmpresarialController {
                 oEmpresarialService.listarTodasEmpresas()
         );
 
-        return "listarEmpresas"; // templates/listarEmpresas.html
+        return "lugares"; // templates/listarEmpresas.html
     }
 
     // GET /empresarialCTR/minhaEmpresa
