@@ -10,9 +10,19 @@ package buscaveg.com.br.BuscaVeg.Enum;
  */
 public enum EnumPerfilAlimentar {
 
-    VEGANO,        // não consome nenhum produto de origem animal
-    VEGETARIANO,   // não consome carne
-    FLEXITARIANO,  // come predominantemente vegetais, mas aceita carne às vezes
-    SIMPATIZANTE   // não é vegetariano, mas se interessa pela alimentação vegetal
+    VEGANO("Vegano"),        // não consome nenhum produto de origem animal
+    VEGETARIANO("Vegetariano"),   // não consome carne
+    FLEXITARIANO("Flexitariano"),  // come predominantemente vegetais, mas aceita carne às vezes
+    SIMPATIZANTE("Simpatizante");  // não é vegetariano, mas se interessa pela alimentação vegetal
+
+    private final String descricao;
+
+    EnumPerfilAlimentar(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
 
 }

@@ -257,6 +257,25 @@
  .food-info {
      padding: 20px;
  }
+
+ .favorite-btn {
+      margin: 8px 0;
+      padding: 10px 12px;
+  }
+
+ .favorite-btn.is-favorite {
+      background: #e8f5e9;
+      color: #245c29;
+  }
+
+ .favorite-btn.is-favorite:hover {
+      background: #d7ecd8;
+  }
+
+ .selected-place {
+      outline: 3px solid #43a047;
+      outline-offset: 3px;
+  }
  
  .tag {
      display: inline-block;

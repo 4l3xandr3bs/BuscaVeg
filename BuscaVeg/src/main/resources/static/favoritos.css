@@ -1,0 +1,161 @@
+.favorites-page {
+    padding-bottom: 48px;
+}
+
+.favorites-toolbar {
+    align-items: end;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: flex-end;
+    margin-bottom: 24px;
+}
+
+.favorites-search,
+.favorites-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.favorites-search span,
+.favorites-filter span {
+    color: #485548;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.favorites-search input,
+.favorites-filter select {
+    background: white;
+    border: 1px solid #ccd5cc;
+    border-radius: 8px;
+    min-height: 44px;
+    padding: 10px 12px;
+}
+
+.favorites-search input {
+    min-width: min(320px, 80vw);
+}
+
+.favorite-card {
+    overflow: hidden;
+}
+
+.favorite-card .place-info {
+    width: 100%;
+}
+
+.favorite-card h2 {
+    color: #245c29;
+    font-size: 21px;
+    margin: 12px 0;
+}
+
+.favorite-address {
+    overflow-wrap: anywhere;
+}
+
+.favorite-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.favorite-actions form {
+    margin: 0;
+}
+
+.favorite-link-button,
+.remove-favorite-button {
+    border: 0;
+    border-radius: 7px;
+    cursor: pointer;
+    display: inline-block;
+    font: inherit;
+    font-weight: bold;
+    padding: 10px 14px;
+    text-decoration: none;
+}
+
+.favorite-link-button {
+    background: #43a047;
+    color: white;
+}
+
+.favorite-link-button:hover {
+    background: #2e7d32;
+    color: white;
+}
+
+.remove-favorite-button {
+    background: #fff0ef;
+    color: #a12622;
+}
+
+.remove-favorite-button:hover {
+    background: #ffe2e0;
+}
+
+.empty-state {
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    margin: 0 auto;
+    max-width: 700px;
+    padding: 40px 24px;
+    text-align: center;
+}
+
+.empty-state h2 {
+    color: #245c29;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: #667067;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.no-filter-results {
+    color: #667067;
+    padding: 24px;
+    text-align: center;
+}
+
+.place-card[hidden] {
+    display: none;
+}
+
+nav form {
+    display: inline;
+}
+
+.nav-logout {
+    background: transparent;
+    border: 0;
+    color: #555;
+    cursor: pointer;
+    font: inherit;
+    font-weight: bold;
+    padding: 0;
+}
+
+.nav-logout:hover {
+    background: transparent;
+    color: #2e7d32;
+}
+
+@media (max-width: 600px) {
+    .favorites-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .favorites-search input {
+        min-width: 100%;
+    }
+}

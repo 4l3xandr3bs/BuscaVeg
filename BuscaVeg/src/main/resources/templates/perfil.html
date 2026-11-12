@@ -1,149 +1,142 @@
 <!DOCTYPE html>
-
-<html lang="pt-BR">
-
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-```
-<title>BuscaVeg - Perfil</title>
-
-<link rel="stylesheet" href="/css/perfil.css">
-```
-
+    <title>BuscaVeg - Meu perfil</title>
+    <link rel="stylesheet" th:href="@{/estilo.css}">
+    <link rel="stylesheet" th:href="@{/perfil.css}">
 </head>
-
 <body>
-
-```
 <header>
-
-    <div class="logo">
-        🥗 BuscaVeg
-    </div>
-
-    <nav>
-        <a href="site.html">Início</a>
-        <a href="lugares.html">Lugares</a>
-        <a href="favoritos.html">Favoritos</a>
-        <a href="pedidos.html">Pedidos</a>
-        <a href="perfil.html">Perfil</a>
+    <div class="logo">🥗 BuscaVeg</div>
+    <nav aria-label="Navegação principal">
+        <a th:href="@{/empresarialCTR/listarEmpresas}">Lugares</a>
+        <a href="#favoritos">Favoritos</a>
+        <a th:href="@{/usuarioCTR/perfil}" aria-current="page">Meu perfil</a>
+        <form th:action="@{/logout}" method="post">
+            <button class="nav-logout" type="submit">Sair</button>
+        </form>
     </nav>
-
 </header>
 
-<main>
-
+<main class="profile-page">
     <section class="hero">
-
-        <div class="logo-login">
-            👤
-        </div>
-
-        <h1>Meu Perfil</h1>
-
-        <p>
-            Gerencie suas informações no BuscaVeg.
-        </p>
-
+        <h1>Meu perfil</h1>
+        <p>Consulte e atualize suas informações pessoais do BuscaVeg.</p>
     </section>
 
-    <div class="login-container">
+    <section class="profile-card" th:classappend="${erro != null} ? ' is-editing' : ''">
+        <div th:if="${sucesso}" class="notice notice-success" role="status" th:text="${sucesso}"></div>
+        <div th:if="${erro}" class="notice notice-error" role="alert" th:text="${erro}"></div>
 
-        <h2>Informações pessoais</h2>
-
-        <form>
-
-            <label>Username</label>
-
-            <input
-                type="text"
-                name="username"
-                placeholder="Digite seu username">
-
-            <label>E-mail</label>
-
-            <input
-                type="email"
-                name="email"
-                placeholder="Digite seu e-mail">
-
-            <label>Tipo de alimentação</label>
-
-            <select name="alimentacao">
-
-                <option value="vegetariano">
-                    Vegetariano
-                </option>
-
-                <option value="vegano">
-                    Vegano
-                </option>
-
-            </select>
-
-            <button type="submit">
-                Salvar alterações
-            </button>
-
-        </form>
-
-    </div>
-
-    <section class="places">
-
-        <div class="section-title">
-
-            <h2>Meus favoritos</h2>
-
-        </div>
-
-        <div class="places-container">
-
-            <div class="place-card">
-
-                <div class="place-image">
-                    🥗
+        <div class="profile-view">
+            <div class="profile-heading">
+                <div>
+                    <p class="eyebrow">Suas informações</p>
+                    <h2 th:text="${perfil.nome}">Nome do usuário</h2>
                 </div>
-
-                <div class="place-info">
-
-                    <h3>Green Garden</h3>
-
-                    <p>
-                        ⭐ 4,8
-                    </p>
-
-                    <button>
-                        Ver lugar
-                    </button>
-
-                </div>
-
+                <button class="primary-button" type="button" data-edit-profile>Editar perfil</button>
             </div>
 
+            <dl class="profile-details">
+                <div>
+                    <dt>E-mail</dt>
+                    <dd th:text="${email}">email@exemplo.com</dd>
+                </div>
+                <div>
+                    <dt>Data de nascimento</dt>
+                    <dd th:text="${perfil.dataNascimento != null ? #temporals.format(perfil.dataNascimento, 'dd/MM/yyyy') : 'Não informada'}">Não informada</dd>
+                </div>
+                <div>
+                    <dt>Perfil alimentar</dt>
+                    <dd th:text="${perfil.perfilAlimentar.descricao}">Vegetariano</dd>
+                </div>
+                <div class="detail-address">
+                    <dt>Endereço</dt>
+                    <dd th:text="${perfil.endereco}">Endereço do usuário</dd>
+                </div>
+            </dl>
         </div>
 
+        <div class="profile-edit">
+            <div class="profile-heading">
+                <div>
+                    <p class="eyebrow">Atualize seus dados</p>
+                    <h2>Editar perfil</h2>
+                </div>
+            </div>
+
+            <form th:action="@{/usuarioCTR/perfil}" th:object="${perfil}" method="post">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="nome">Nome completo</label>
+                        <input id="nome" type="text" th:field="*{nome}" maxlength="50" autocomplete="name" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="email">E-mail</label>
+                        <input id="email" type="email" th:value="${email}" autocomplete="email" readonly>
+                        <small>Este é o e-mail usado para entrar na sua conta.</small>
+                    </div>
+                    <div class="form-field">
+                        <label for="dataNascimento">Data de nascimento</label>
+                        <input id="dataNascimento" type="date" th:field="*{dataNascimento}">
+                    </div>
+                    <div class="form-field">
+                        <label for="perfilAlimentar">Perfil alimentar</label>
+                        <select id="perfilAlimentar" th:field="*{perfilAlimentar}" required>
+                            <option value="">Selecione</option>
+                            <option th:each="opcao : ${perfisAlimentares}"
+                                    th:value="${opcao}"
+                                    th:text="${opcao.descricao}">Vegetariano</option>
+                        </select>
+                    </div>
+                    <div class="form-field form-field-wide">
+                        <label for="endereco">Endereço</label>
+                        <input id="endereco" type="text" th:field="*{endereco}"
+                               placeholder="Rua, número, bairro, cidade" autocomplete="street-address" required>
+                        <small>Se você alterar o endereço, ele será atualizado para encontrar lugares próximos.</small>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="primary-button" type="submit">Salvar alterações</button>
+                    <button class="secondary-button" type="button" data-cancel-edit>Cancelar</button>
+                </div>
+            </form>
+        </div>
     </section>
 
+    <section class="favorites-section" id="favoritos">
+        <div>
+            <p class="eyebrow">Sua lista</p>
+            <h2>Meus favoritos</h2>
+            <p>Veja os lugares que você salvou para encontrar depois.</p>
+        </div>
+        <a class="secondary-button link-button" th:href="@{/favoritos}">Ver meus favoritos</a>
+    </section>
 </main>
 
 <footer>
-
     <h3>🥗 BuscaVeg</h3>
-
-    <p>
-        Encontre opções vegetarianas e veganas perto de você.
-    </p>
-
-    <p class="copyright">
-        © 2026 BuscaVeg - Todos os direitos reservados.
-    </p>
-
+    <p>Encontre opções vegetarianas e veganas perto de você.</p>
+    <p class="copyright">© 2026 BuscaVeg - Todos os direitos reservados.</p>
 </footer>
-```
 
+<script>
+    const profileCard = document.querySelector('.profile-card');
+    const editProfileButton = document.querySelector('[data-edit-profile]');
+    const cancelEditButton = document.querySelector('[data-cancel-edit]');
+
+    editProfileButton.addEventListener('click', () => {
+        profileCard.classList.add('is-editing');
+        document.querySelector('#nome').focus();
+    });
+
+    cancelEditButton.addEventListener('click', () => {
+        document.querySelector('.profile-edit form').reset();
+        profileCard.classList.remove('is-editing');
+    });
+</script>
 </body>
-
 </html>

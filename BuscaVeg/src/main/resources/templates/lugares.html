@@ -138,11 +138,10 @@
 <header>
     <div class="logo">🥗 BuscaVeg</div>
     <nav>
-        <a th:href="@{site}">Início</a>
+        <a th:href="@{/empresarialCTR/listarEmpresas}">Início</a>
         <a th:href="@{/empresarialCTR/listarEmpresas}">Lugares</a>
         <a th:href="@{/favoritos}">Favoritos</a>
-        <a th:href="@{/pedidos}">Pedidos</a>
-        <a th:href="@{/perfil}">Perfil</a>
+        <a th:href="@{/usuarioCTR/perfil}">Perfil</a>
     </nav>
 </header>
 
@@ -164,7 +163,8 @@
                 Nenhum lugar encontrado.
             </div>
 
-            <div class="place-card" th:each="empresa : ${empresas}">
+            <div class="place-card" th:each="empresa : ${empresas}"
+                 th:id="|lugar-${empresa.id}|">
                 <div class="place-image">🥗</div>
 
                 <div class="place-info">
@@ -172,6 +172,19 @@
                     <h3 th:text="${empresa.nomeFantasia}">Nome do estabelecimento</h3>
                     <p th:text="${empresa.endereco}">Endereço</p>
                     <p th:text="${empresa.telefone}">Telefone</p>
+
+                    <form th:action="@{/favoritos/{id}(id=${empresa.id})}" method="post">
+                        <button class="favorite-btn" type="submit"
+                                th:if="${ehUsuario and !favoritosIds.contains(empresa.id)}">
+                            ♡ Adicionar aos favoritos
+                        </button>
+                    </form>
+                    <form th:action="@{/favoritos/{id}/remover(id=${empresa.id})}" method="post">
+                        <button class="favorite-btn is-favorite" type="submit"
+                                th:if="${ehUsuario and favoritosIds.contains(empresa.id)}">
+                            ♥ Remover dos favoritos
+                        </button>
+                    </form>
 
                     <button class="route-btn"
                             type="button"
@@ -316,6 +329,15 @@
             buildRoute(lat, lng, name);
         });
     });
+
+    const lugarSelecionado = new URLSearchParams(window.location.search).get('lugar');
+    if (lugarSelecionado) {
+        const card = document.getElementById(`lugar-${lugarSelecionado}`);
+        if (card) {
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            card.classList.add('selected-place');
+        }
+    }
 </script>
 
 </body>

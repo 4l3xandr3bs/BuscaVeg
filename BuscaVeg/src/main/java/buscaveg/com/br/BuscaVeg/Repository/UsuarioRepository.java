@@ -17,4 +17,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     List<Usuario> findByPerfilAlimentar(EnumPerfilAlimentar perfilAlimentar);
     Optional<Usuario> findByContaEmail(String email);
+    List<Usuario> findAllByFavoritos_Id(Long empresarialId);
 }

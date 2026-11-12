@@ -2,6 +2,7 @@ package buscaveg.com.br.BuscaVeg.Controller;
 
 import java.security.Principal;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import buscaveg.com.br.BuscaVeg.DTO.AlterarEmpresarialDTO;
 import buscaveg.com.br.BuscaVeg.DTO.CadastroEmpresarialDTO;
 import buscaveg.com.br.BuscaVeg.Entity.Empresarial;
 import buscaveg.com.br.BuscaVeg.Excecao.RegraDeNegocioException;
+import buscaveg.com.br.BuscaVeg.Service.FavoritoService;
 import buscaveg.com.br.BuscaVeg.Service.EmpresarialService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,11 +26,14 @@ import jakarta.servlet.http.HttpServletRequest;
 public class EmpresarialController {
 
     private final EmpresarialService oEmpresarialService;
+    private final FavoritoService favoritoService;
 
     public EmpresarialController(
-            EmpresarialService oEmpresarialService) {
+            EmpresarialService oEmpresarialService,
+            FavoritoService favoritoService) {
 
         this.oEmpresarialService = oEmpresarialService;
+        this.favoritoService = favoritoService;
     }
 
     // GET /empresarialCTR/formCadastrarEmpresa
@@ -63,12 +68,15 @@ public class EmpresarialController {
     // GET /empresarialCTR/listarEmpresas
     // Lista todas as empresas (qualquer pessoa logada pode ver).
     @GetMapping("/listarEmpresas")
-    public String listarEmpresas(Model oModel) {
+    public String listarEmpresas(Authentication authentication, Model oModel) {
 
         oModel.addAttribute(
                 "empresas",
                 oEmpresarialService.listarTodasEmpresas()
         );
+        oModel.addAttribute("favoritosIds", favoritoService.listarIdsFavoritos(authentication.getName()));
+        oModel.addAttribute("ehUsuario", authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_USUARIO")));
 
         return "lugares"; // templates/listarEmpresas.html
     }

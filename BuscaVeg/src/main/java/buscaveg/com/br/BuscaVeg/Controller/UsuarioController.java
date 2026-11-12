@@ -1,13 +1,19 @@
 package buscaveg.com.br.BuscaVeg.Controller;
 
+import java.security.Principal;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import buscaveg.com.br.BuscaVeg.DTO.CadastroUsuarioDTO;
+import buscaveg.com.br.BuscaVeg.DTO.PerfilUsuarioDTO;
+import buscaveg.com.br.BuscaVeg.Entity.Usuario;
+import buscaveg.com.br.BuscaVeg.Enum.EnumPerfilAlimentar;
 import buscaveg.com.br.BuscaVeg.Excecao.RegraDeNegocioException;
 import buscaveg.com.br.BuscaVeg.Service.UsuarioService;
 
@@ -41,7 +47,35 @@ public class UsuarioController {
         return "login"; // abre templates/login.html
     }
 
-   
+    @GetMapping("/perfil")
+    public String meuPerfil(Principal principal, Model oModel) {
+        Usuario usuario = oUsuarioService.buscarPorEmailDaConta(principal.getName());
+        oModel.addAttribute("perfil", montarPerfilDTO(usuario));
+        oModel.addAttribute("email", principal.getName());
+        oModel.addAttribute("perfisAlimentares", EnumPerfilAlimentar.values());
+        return "perfil";
+    }
+
+    @PostMapping("/perfil")
+    public String atualizarPerfil(
+            @ModelAttribute("perfil") PerfilUsuarioDTO dto,
+            Principal principal,
+            Model oModel,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            oUsuarioService.atualizarPerfil(principal.getName(), dto);
+        } catch (RegraDeNegocioException e) {
+            oModel.addAttribute("erro", e.getMessage());
+            oModel.addAttribute("email", principal.getName());
+            oModel.addAttribute("perfisAlimentares", EnumPerfilAlimentar.values());
+            return "perfil";
+        }
+
+        redirectAttributes.addFlashAttribute("sucesso", "Perfil atualizado com sucesso.");
+        return "redirect:/usuarioCTR/perfil";
+    }
+
     @PostMapping("/salvarUsuario")
     public String cadastrarUsuario(
             @ModelAttribute("usuario") CadastroUsuarioDTO dto,
@@ -59,5 +93,14 @@ public class UsuarioController {
 
 
         return "redirect:/usuarioCTR/login?cadastrado";
+    }
+
+    private PerfilUsuarioDTO montarPerfilDTO(Usuario usuario) {
+        PerfilUsuarioDTO dto = new PerfilUsuarioDTO();
+        dto.setNome(usuario.getNome());
+        dto.setDataNascimento(usuario.getDataNascimento());
+        dto.setPerfilAlimentar(usuario.getPerfilAlimentar());
+        dto.setEndereco(usuario.getEndereco());
+        return dto;
     }
 }

@@ -23,15 +23,18 @@ public class EmpresarialService {
     private final EmpresarialRepository oEmpresarialRepository;
     private final ContaService oContaService;
     private final GeoService geoService;
+    private final FavoritoService favoritoService;
 
     public EmpresarialService(
             EmpresarialRepository oEmpresarialRepository,
             ContaService oContaService,
-            GeoService geoService) {
+            GeoService geoService,
+            FavoritoService favoritoService) {
 
         this.oEmpresarialRepository = oEmpresarialRepository;
         this.oContaService = oContaService;
         this.geoService = geoService;
+        this.favoritoService = favoritoService;
     }
 
     public Empresarial buscarEmpresarialPorId(Long id) {
@@ -154,6 +157,7 @@ public class EmpresarialService {
         Empresarial empresa = buscarEmpresaDoLogado(id, emailLogado);
         Conta conta = empresa.getConta();
 
+        favoritoService.removerEstabelecimentoDeTodos(id);
         oEmpresarialRepository.delete(empresa);
         oContaService.excluirConta(conta);
     }

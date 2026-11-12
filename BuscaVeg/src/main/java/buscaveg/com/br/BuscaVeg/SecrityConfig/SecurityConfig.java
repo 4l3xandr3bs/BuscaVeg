@@ -28,6 +28,13 @@ public class SecurityConfig {
                         .permitAll()
 
                         .requestMatchers(
+                                "/usuarioCTR/perfil")
+                        .hasRole("USUARIO")
+
+                        .requestMatchers("/favoritos", "/favoritos/**")
+                        .hasRole("USUARIO")
+
+                        .requestMatchers(
                                 "/empresarialCTR/minhaEmpresa",
                                 "/empresarialCTR/editarEmpresa/**",
                                 "/empresarialCTR/alterarEmpresa/**",
@@ -46,7 +53,7 @@ public class SecurityConfig {
                             response.sendRedirect(request.getContextPath()
                                     + (ehEmpresa
                                             ? "/empresarialCTR/minhaEmpresa"
-                                            : "/empresarialCTR/listarEmpresas"));
+                                            : "/usuarioCTR/perfil"));
                         })
                         .permitAll())
 

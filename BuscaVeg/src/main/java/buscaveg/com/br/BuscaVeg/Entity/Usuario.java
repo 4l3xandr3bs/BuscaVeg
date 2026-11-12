@@ -1,6 +1,8 @@
 package buscaveg.com.br.BuscaVeg.Entity;
 
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import buscaveg.com.br.BuscaVeg.Enum.EnumPerfilAlimentar;
 import jakarta.persistence.Column;
@@ -11,6 +13,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -47,4 +51,11 @@ public class Usuario {
     @OneToOne
     @JoinColumn(name = "id_conta", nullable = false)
     private Conta conta;
+
+    @ManyToMany
+    @JoinTable(
+            name = "usuario_favoritos",
+            joinColumns = @JoinColumn(name = "id_usuario"),
+            inverseJoinColumns = @JoinColumn(name = "id_empresarial"))
+    private Set<Empresarial> favoritos = new LinkedHashSet<>();
 }
