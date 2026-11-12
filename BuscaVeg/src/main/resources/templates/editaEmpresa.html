@@ -3,71 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BuscaVeg - Cadastro</title>
-    <link rel="stylesheet" href="/css/cadastro.css">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-
+    <title>BuscaVeg - Editar estabelecimento</title>
+    <link rel="stylesheet" th:href="@{/estilo.css}">
+    <link rel="stylesheet" th:href="@{/perfil-empresa.css}">
 </head>
 <body>
+<header>
+    <div class="logo">🥗 BuscaVeg</div>
+    <nav aria-label="Navegação principal">
+        <a th:href="@{/empresarialCTR/perfil}">Meu estabelecimento</a>
+        <a th:href="@{/cardapio/empresa}">Gerenciar cardápio</a>
+        <form th:action="@{/logout}" method="post">
+            <button class="nav-logout" type="submit">Sair</button>
+        </form>
+    </nav>
+</header>
 
-<div class="cadastro-container">
+<main class="business-profile-page">
+    <section class="hero">
+        <h1>Editar estabelecimento</h1>
+        <p>Atualize as informações públicas do seu perfil no BuscaVeg.</p>
+    </section>
 
-    <div class="logo">🥗</div>
+    <section class="business-card edit-business-card">
+        <div th:if="${erro}" class="notice notice-error" role="alert" th:text="${erro}"></div>
+        <p class="readonly-info">
+            CNPJ: <strong th:text="${empresa.cnpj}">00.000.000/0000-00</strong>
+            <span> · </span>
+            E-mail: <strong th:text="${empresa.conta.email}">contato@exemplo.com</strong>
+        </p>
 
-    <h1>Crie sua conta</h1>
+        <form th:action="@{/empresarialCTR/alterarEmpresa/{id}(id=${empresaId})}"
+              th:object="${empresarial}" method="post">
+            <div class="form-grid">
+                <div class="form-field">
+                    <label for="nomeFantasia">Nome fantasia</label>
+                    <input id="nomeFantasia" type="text" th:field="*{nomeFantasia}"
+                           maxlength="100" autocomplete="organization" required>
+                </div>
+                <div class="form-field">
+                    <label for="razaoSocial">Razão social</label>
+                    <input id="razaoSocial" type="text" th:field="*{razaoSocial}"
+                           maxlength="150" required>
+                </div>
+                <div class="form-field">
+                    <label for="telefone">Telefone</label>
+                    <input id="telefone" type="tel" th:field="*{telefone}"
+                           maxlength="20" autocomplete="tel" required>
+                </div>
+                <div class="form-field">
+                    <label for="tipoEspecializacao">Tipo de estabelecimento</label>
+                    <select id="tipoEspecializacao" th:field="*{tipoEspecializacao}" required>
+                        <option value="">Selecione</option>
+                        <option th:each="tipo : ${tiposEstabelecimento}"
+                                th:value="${tipo}" th:text="${tipo}">RESTAURANTE</option>
+                    </select>
+                </div>
+                <div class="form-field form-field-wide">
+                    <label for="endereco">Endereço completo</label>
+                    <input id="endereco" type="text" th:field="*{endereco}"
+                           maxlength="200" autocomplete="street-address"
+                           placeholder="Rua, número, bairro, cidade" required>
+                </div>
+            </div>
 
-    <p class="subtitle">
-        Faça seu cadastro para começar a usar o BuscaVeg.
-    </p>
+            <div class="form-actions">
+                <button class="primary-button" type="submit">Salvar alterações</button>
+                <a class="secondary-button" th:href="@{/empresarialCTR/perfil}">Cancelar</a>
+            </div>
+        </form>
+    </section>
+</main>
 
-    <form th:action="@{/usuarioCTR/salvarUsuario}" th:object="${usuario}" method="post">
-        <div th:if="${erro}" class="alert" th:text="${erro}"></div>
-
-        <label for="nome">Nome completo</label>
-        <input
-            id="nome"
-            type="text"
-            th:field="*{nome}"
-            placeholder="Digite seu nome"
-            required>
-
-        <label for="email">E-mail</label>
-        <input
-            id="email"
-            type="email"
-            th:field="*{email}"
-            placeholder="Digite seu e-mail"
-            required>
-
-        <label for="password">Senha</label>
-        <input
-            id="password"
-            type="password"
-            th:field="*{password}"
-            placeholder="Digite sua senha"
-            required>
-
-        <label for="perfilAlimentar">Tipo de alimentação</label>
-        <select id="perfilAlimentar" th:field="*{perfilAlimentar}" required>
-            <option value="">Selecione</option>
-            <option value="VEGETARIANO">Vegetariano</option>
-            <option value="VEGANO">Vegano</option>
-        </select>
-
-        <label for="Endereço">Endereço</label>
-        <input
-            id="latitude"
-            type="number"
-            step="any"
-            th:field="*{latitude}">
-
-        <button type="submit">
-            Criar conta
-        </button>
-    </form>
-      
-    <p class="login-link">
-        Já possui uma conta?
-        <a th:href="@{/usuarioCTR/login}">Entrar</a>
-    </p>
-      
+<footer>
+    <h3>🥗 BuscaVeg</h3>
+    <p>Conectando estabelecimentos a quem busca opções vegetais.</p>
+    <p class="copyright">© 2026 BuscaVeg - Todos os direitos reservados.</p>
+</footer>
+</body>
+</html>

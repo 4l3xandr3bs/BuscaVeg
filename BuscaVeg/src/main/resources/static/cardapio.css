@@ -1,0 +1,302 @@
+.menu-page {
+    max-width: 1100px;
+    padding-bottom: 48px;
+}
+
+.restaurant-info,
+.menu-manager,
+.empty-state {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+    margin: 28px auto;
+    padding: 28px;
+}
+
+.restaurant-info h1 {
+    color: #245c29;
+    margin: 8px 0;
+}
+
+.restaurant-info > p:not(.eyebrow) {
+    color: #667067;
+    margin-top: 7px;
+}
+
+.eyebrow {
+    color: #66836a;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.dietary-note {
+    background: #e8f5e9;
+    border-radius: 8px;
+    color: #245c29 !important;
+    display: inline-block;
+    margin-top: 16px !important;
+    padding: 10px 12px;
+}
+
+.manager-heading {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.manager-heading h2 {
+    color: #245c29;
+    margin: 5px 0;
+}
+
+.manager-heading p:not(.eyebrow) {
+    color: #667067;
+    margin-top: 6px;
+}
+
+.dish-form {
+    border-top: 1px solid #e6ece6;
+    display: none;
+    margin-top: 24px;
+    padding-top: 24px;
+}
+
+.dish-form.is-open {
+    display: block;
+}
+
+.form-grid {
+    display: grid;
+    gap: 18px 22px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.form-field-wide {
+    grid-column: 1 / -1;
+}
+
+.form-field label,
+.tag-options legend {
+    color: #333;
+    font-weight: bold;
+}
+
+.form-field input,
+.form-field textarea,
+.form-field select {
+    border: 1px solid #ccd5cc;
+    border-radius: 8px;
+    font: inherit;
+    padding: 12px;
+    width: 100%;
+}
+
+.tag-options {
+    border: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 18px;
+    padding: 0;
+}
+
+.tag-options legend {
+    margin-bottom: 10px;
+}
+
+.tag-option {
+    align-items: center;
+    display: inline-flex;
+    font-weight: normal !important;
+    gap: 7px;
+}
+
+.tag-option input {
+    accent-color: #43a047;
+    width: auto;
+}
+
+.tag-options small {
+    color: #667067;
+    flex-basis: 100%;
+    line-height: 1.4;
+}
+
+.form-actions,
+.owner-dish-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.primary-button,
+.secondary-button,
+.remove-button {
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-block;
+    font: inherit;
+    font-weight: bold;
+    padding: 11px 15px;
+    text-decoration: none;
+}
+
+.primary-button {
+    background: #43a047;
+    color: #fff;
+}
+
+.primary-button:hover {
+    background: #2e7d32;
+}
+
+.secondary-button {
+    background: #eef4ee;
+    color: #2e6733;
+}
+
+.secondary-button:hover {
+    background: #e2eee3;
+}
+
+.remove-button {
+    background: #fff0ef;
+    color: #a12622;
+}
+
+.remove-button:hover {
+    background: #ffe2e0;
+}
+
+.menu-section {
+    margin: 36px auto;
+}
+
+.menu-section .section-title {
+    margin-bottom: 20px;
+}
+
+.menu-card {
+    min-width: 0;
+}
+
+.menu-card .food-info {
+    height: calc(100% - 190px);
+}
+
+.menu-card h3 {
+    color: #245c29;
+    margin: 12px 0 8px;
+}
+
+.menu-card .food-info > p {
+    color: #606b60;
+    line-height: 1.5;
+    min-height: 46px;
+    overflow-wrap: anywhere;
+}
+
+.dish-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.availability-tag {
+    background: #fff0ef;
+    border-radius: 5px;
+    color: #a12622;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 5px 9px;
+}
+
+.is-unavailable {
+    opacity: 0.72;
+}
+
+.food-bottom {
+    margin-top: 16px;
+}
+
+.food-bottom strong {
+    color: #245c29;
+    font-size: 18px;
+}
+
+.empty-state {
+    text-align: center;
+}
+
+.empty-state h3 {
+    color: #245c29;
+}
+
+.empty-state p {
+    color: #667067;
+    margin-top: 8px;
+}
+
+.notice {
+    border-radius: 8px;
+    margin: 18px auto;
+    max-width: 1100px;
+    padding: 12px 16px;
+}
+
+.notice-success {
+    background: #e8f5e9;
+    color: #245c29;
+}
+
+.notice-error {
+    background: #fff0ef;
+    color: #a12622;
+}
+
+nav form {
+    display: inline;
+}
+
+.nav-logout {
+    background: transparent;
+    border: 0;
+    color: #555;
+    cursor: pointer;
+    font: inherit;
+    font-weight: bold;
+    padding: 0;
+}
+
+.nav-logout:hover {
+    background: transparent;
+    color: #2e7d32;
+}
+
+@media (max-width: 650px) {
+    .restaurant-info,
+    .menu-manager,
+    .empty-state {
+        padding: 20px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-field-wide {
+        grid-column: auto;
+    }
+}

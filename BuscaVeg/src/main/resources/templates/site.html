@@ -1,122 +1,63 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>BuscaVeg - Encontrar lugares</title>
-
-    <link rel="stylesheet" href="/estilo.css">
+    <title>BuscaVeg - Encontre lugares</title>
+    <link rel="stylesheet" th:href="@{/estilo.css}">
+    <link rel="stylesheet" th:href="@{/site.css}">
 </head>
-
 <body>
+<header>
+    <div class="logo">🥗 BuscaVeg</div>
+    <nav aria-label="Navegação principal">
+        <a th:href="@{/site}" aria-current="page">Início</a>
+        <a th:href="@{/empresarialCTR/listarEmpresas}">Lugares</a>
+        <a th:if="${ehUsuario}" th:href="@{/favoritos}">Favoritos</a>
+        <a th:if="${ehUsuario}" th:href="@{/usuarioCTR/perfil}">Meu perfil</a>
+        <a th:unless="${ehUsuario}" th:href="@{/empresarialCTR/perfil}">Meu estabelecimento</a>
+    </nav>
+</header>
 
-    
-    <header>
+<main>
+    <section class="hero">
+        <h1>Encontre opções veganas e vegetarianas</h1>
+        <p>Descubra restaurantes e mercados próximos e confira os pratos compatíveis com seu perfil alimentar.</p>
+        <form class="search-box" th:action="@{/empresarialCTR/listarEmpresas}" method="get">
+            <label class="sr-only" for="place-search">Buscar lugares</label>
+            <input id="place-search" name="busca" type="search" placeholder="Procure por restaurante ou lugar">
+            <button class="search-button" type="submit">Pesquisar</button>
+        </form>
+    </section>
 
-        <div class="logo">
-            🥗 BuscaVeg
+    <section class="categories">
+        <h2>Encontre o que procura</h2>
+        <div class="category-container">
+            <a class="category category-link" th:href="@{/empresarialCTR/listarEmpresas}">
+                <div class="category-icon">🥗</div>
+                <h3>Restaurantes</h3>
+                <p>Confira os cardápios e opções vegetais.</p>
+            </a>
+            <a class="category category-link" th:href="@{/empresarialCTR/listarEmpresas}">
+                <div class="category-icon">🛒</div>
+                <h3>Mercados</h3>
+                <p>Encontre estabelecimentos perto de você.</p>
+            </a>
         </div>
+    </section>
 
-        <nav>
-            <a href="site">Início</a>
-            <a href="/favoritos">Favoritos</a>
-            <a href="/usuarioCTR/perfil">Perfil</a>
-        </nav>
+    <section class="places">
+        <div class="section-title">
+            <h2>Comece a explorar</h2>
+            <a th:href="@{/empresarialCTR/listarEmpresas}">Ver todos os lugares</a>
+        </div>
+    </section>
+</main>
 
-    </header>
-
-
-    
-    <main>
-
-        <section class="hero">
-
-            <h1>
-                Encontre opções veganas e vegetarianas
-            </h1>
-
-            <p>
-                Descubra restaurantes, lanchonetes e mercados perto de você.
-            </p>
-
-
-            
-            <div class="search-box">
-
-                <input
-                    type="text"
-                    placeholder="🔎 Procure por restaurante, comida ou lugar...">
-
-                <button>
-                    Pesquisar
-                </button>
-
-            </div>
-
-
-            
-            <div class="location">  
-                <a href="#"></a>
-            </div>
-
-        </section>
-
-
-        
-        <section class="categories">
-
-            <h2>O que você está procurando?</h2>
-
-            <div class="category-container">
-
-                <div class="category">
-                    <div class="category-icon">🥗</div>
-                    <h3>Restaurantes</h3>
-                    <p>Veganos e vegetarianos</p>
-                </div>
-
-                <div class="category">
-                    <div class="category-icon">🍔</div>
-                    <h3>Lanches</h3>
-                    <p>Hambúrgueres e lanches</p>
-                </div>
-
-                <div class="category">
-                    <div class="category-icon">🍕</div>
-                    <h3>Pizzarias</h3>
-                    <p>Opções sem carne</p>
-                </div>
-
-                <div class="category">
-                    <div class="category-icon">🛒</div>
-                    <h3>Mercados</h3>
-                    <p>Produtos veganos</p>
-                </div>
-
-            </div>
-
-        </section>
-
-
-        
-        <section class="places">
-
-            <div class="section-title">
-
-                <h2>Lugares próximos</h2>
-
-                <a href="">Ver todos</a>
-
-            </div>
-
-
-            <div class="places-container">
-
-
-                
-                <div class="place-card">
-
-                    <div class="place-image">
-```
+<footer>
+    <h3>🥗 BuscaVeg</h3>
+    <p>Encontre opções vegetarianas e veganas perto de você.</p>
+    <p class="copyright">© 2026 BuscaVeg - Todos os direitos reservados.</p>
+</footer>
+</body>
+</html>

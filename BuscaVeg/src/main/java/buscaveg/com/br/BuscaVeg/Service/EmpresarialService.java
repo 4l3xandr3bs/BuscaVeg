@@ -7,6 +7,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.client.RestClientException;
 
 import buscaveg.com.br.BuscaVeg.DTO.AlterarEmpresarialDTO;
 import buscaveg.com.br.BuscaVeg.DTO.CadastroEmpresarialDTO;
@@ -24,17 +25,20 @@ public class EmpresarialService {
     private final ContaService oContaService;
     private final GeoService geoService;
     private final FavoritoService favoritoService;
+    private final CardapioService cardapioService;
 
     public EmpresarialService(
             EmpresarialRepository oEmpresarialRepository,
             ContaService oContaService,
             GeoService geoService,
-            FavoritoService favoritoService) {
+            FavoritoService favoritoService,
+            CardapioService cardapioService) {
 
         this.oEmpresarialRepository = oEmpresarialRepository;
         this.oContaService = oContaService;
         this.geoService = geoService;
         this.favoritoService = favoritoService;
+        this.cardapioService = cardapioService;
     }
 
     public Empresarial buscarEmpresarialPorId(Long id) {
@@ -135,15 +139,24 @@ public class EmpresarialService {
                 dto.getTipoEspecializacao()
         );
 
-        if (dto.getEndereco() != null && !dto.getEndereco().isBlank()) {
-            double[] coords = geoService.geocodeAddress(dto.getEndereco());
-            dto.setLatitude(coords[0]);
-            dto.setLongitude(coords[1]);
+        String endereco = dto.getEndereco().trim();
+        if (!endereco.equals(empresa.getEndereco())) {
+            try {
+                double[] coords = geoService.geocodeAddress(endereco);
+                dto.setLatitude(coords[0]);
+                dto.setLongitude(coords[1]);
+            } catch (RestClientException e) {
+                throw new RegraDeNegocioException(
+                        "Não foi possível localizar o endereço. Verifique-o e tente novamente.");
+            }
+        } else {
+            dto.setLatitude(empresa.getLatitude());
+            dto.setLongitude(empresa.getLongitude());
         }
 
         empresa.setNomeFantasia(dto.getNomeFantasia().trim());
         empresa.setRazaoSocial(dto.getRazaoSocial().trim());
-        empresa.setEndereco(dto.getEndereco().trim());
+        empresa.setEndereco(endereco);
         empresa.setTelefone(dto.getTelefone().trim());
         empresa.setLatitude(dto.getLatitude());
         empresa.setLongitude(dto.getLongitude());
@@ -157,6 +170,7 @@ public class EmpresarialService {
         Empresarial empresa = buscarEmpresaDoLogado(id, emailLogado);
         Conta conta = empresa.getConta();
 
+        cardapioService.removerCardapioDoEstabelecimento(id);
         favoritoService.removerEstabelecimentoDeTodos(id);
         oEmpresarialRepository.delete(empresa);
         oContaService.excluirConta(conta);

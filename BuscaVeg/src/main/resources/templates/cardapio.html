@@ -1,127 +1,146 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>BuscaVeg - Cardápio</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-
-    <link rel="stylesheet" href="/css/cardapio.css">
+    <title th:text="|Cardápio - ${empresa.nomeFantasia}|">BuscaVeg - Cardápio</title>
+    <link rel="stylesheet" th:href="@{/estilo.css}">
+    <link rel="stylesheet" th:href="@{/cardapio.css}">
 </head>
-
 <body>
+<header>
+    <div class="logo">🥗 BuscaVeg</div>
+    <nav aria-label="Navegação principal">
+        <a th:href="@{/empresarialCTR/listarEmpresas}">Lugares</a>
+        <a th:if="${ehEmpresa}" th:href="@{/empresarialCTR/perfil}">Meu estabelecimento</a>
+        <a th:if="${ehUsuario}" th:href="@{/favoritos}">Favoritos</a>
+        <a th:if="${ehUsuario}" th:href="@{/usuarioCTR/perfil}">Meu perfil</a>
+        <form th:action="@{/logout}" method="post">
+            <button class="nav-logout" type="submit">Sair</button>
+        </form>
+    </nav>
+</header>
 
-    <header>
+<main class="menu-page">
+    <section class="restaurant-info">
+        <p class="eyebrow" th:text="${empresa.tipoEspecializacao}">RESTAURANTE</p>
+        <h1 th:text="${empresa.nomeFantasia}">Nome do estabelecimento</h1>
+        <p th:text="${empresa.endereco}">Endereço do estabelecimento</p>
+        <p th:text="${empresa.telefone}">Telefone</p>
+        <p th:if="${perfilAlimentar != null}" class="dietary-note"
+           th:text="|Exibindo pratos compatíveis com o perfil ${perfilAlimentar.descricao}.|">
+            Pratos compatíveis com seu perfil alimentar.
+        </p>
+    </section>
 
-        <div class="logo">
-            🥗 BuscaVeg
+    <div th:if="${sucesso}" class="notice notice-success" role="status" th:text="${sucesso}"></div>
+    <div th:if="${erro}" class="notice notice-error" role="alert" th:text="${erro}"></div>
+
+    <section class="menu-manager" th:if="${ehDono}">
+        <div class="manager-heading">
+            <div>
+                <p class="eyebrow">Área do estabelecimento</p>
+                <h2>Gerenciar cardápio</h2>
+                <p>Adicione pratos, marque itens indisponíveis ou remova opções antigas.</p>
+            </div>
+            <button type="button" class="primary-button" id="toggle-dish-form">Adicionar prato</button>
         </div>
 
-        <nav>
-            <a href="site.html">Início</a>
-            <a href="lugares.html">Lugares</a>
-            <a href="favoritos.html">Favoritos</a>
-            <a href="pedidos.html">Pedidos</a>
-            <a href="perfil.html">Perfil</a>
-        </nav>
-
-    </header>
-
-    <main>
-
-        <section class="hero">
-
-            <h1>Cardápio</h1>
-
-            <p>
-                Confira as opções vegetarianas e veganas disponíveis.
-            </p>
-
-        </section>
-
-        <section class="restaurant-info">
-
-            <div>
-                <h2>Green Garden</h2>
-
-                <p>
-                    Comida saudável e vegana
-                </p>
-
-                <span>
-                    ⭐ 4,8
-                </span>
-
-            </div>
-
-        </section>
-
-        <section class="menu">
-
-            <div class="section-title">
-                <h2>Pratos disponíveis</h2>
-            </div>
-
-            <div class="menu-container">
-
-            
-
-                <div class="menu-card">
-
-                    <div class="food-image">
-                        🍔
-                    </div>
-
-                    <div class="food-info">
-
-                        <span class="tag">
-                            VEGANO
-                        </span>
-
-                        <h3>Hambúrguer Vegano</h3>
-
-                        <p>
-                            Hambúrguer vegetal com pão,
-                            salada e molho da casa.
-                        </p>
-
-                        <div class="food-bottom">
-
-                            <strong>
-                                R$ 28,00
-                            </strong>
-
-                            <button>
-                                Adicionar
-                            </button>
-
-                        </div>
-
-                    </div>
-
+        <form class="dish-form" th:classappend="${formAberto == true} ? ' is-open' : ''"
+              th:action="@{/cardapio/{id}/pratos(id=${empresa.id})}"
+              th:object="${prato}" method="post">
+            <div class="form-grid">
+                <div class="form-field">
+                    <label for="dish-name">Nome do prato</label>
+                    <input id="dish-name" type="text" th:field="*{nome}" maxlength="100" required>
                 </div>
+                <div class="form-field">
+                    <label for="dish-price">Preço (R$)</label>
+                    <input id="dish-price" type="number" th:field="*{preco}"
+                           min="0.01" step="0.01" placeholder="25.90" required>
+                </div>
+                <div class="form-field form-field-wide">
+                    <label for="dish-description">Descrição</label>
+                    <textarea id="dish-description" th:field="*{descricao}" maxlength="500"
+                              rows="3" required></textarea>
+                </div>
+                <fieldset class="form-field form-field-wide tag-options">
+                    <legend>Etiquetas alimentares</legend>
+                    <label class="tag-option" th:each="tag : ${tagsAlimentares}">
+                        <input type="checkbox" th:field="*{tags}" th:value="${tag}">
+                        <span th:text="${tag.descricao}">Vegano</span>
+                    </label>
+                    <small>Marque Vegano ou Vegetariano para que o prato apareça a pessoas com esse perfil.</small>
+                </fieldset>
             </div>
+            <div class="form-actions">
+                <button class="primary-button" type="submit">Salvar prato</button>
+                <button class="secondary-button" type="reset">Limpar</button>
+            </div>
+        </form>
+    </section>
 
-        </section>
+    <section class="menu-section">
+        <div class="section-title">
+            <h2 th:if="${ehDono}">Pratos cadastrados</h2>
+            <h2 th:unless="${ehDono}">Pratos disponíveis</h2>
+        </div>
 
-    </main>
+        <div class="empty-state" th:if="${#lists.isEmpty(pratos)}">
+            <h3 th:if="${ehDono}">Seu cardápio ainda está vazio</h3>
+            <h3 th:unless="${ehDono}">Nenhum prato compatível disponível</h3>
+            <p th:if="${ehDono}">Use “Adicionar prato” para publicar sua primeira opção.</p>
+            <p th:unless="${ehDono}">Este estabelecimento ainda não publicou pratos compatíveis com seu perfil.</p>
+        </div>
 
-    <footer>
+        <div class="menu-container" th:if="${!#lists.isEmpty(pratos)}">
+            <article class="menu-card" th:each="prato : ${pratos}"
+                     th:classappend="${!prato.disponivel} ? ' is-unavailable' : ''">
+                <div class="food-image">🥗</div>
+                <div class="food-info">
+                    <div class="dish-tags">
+                        <span class="tag" th:each="tag : ${prato.tags}" th:text="${tag.descricao}">VEGANO</span>
+                        <span class="availability-tag" th:if="${!prato.disponivel}">Indisponível</span>
+                    </div>
+                    <h3 th:text="${prato.nome}">Nome do prato</h3>
+                    <p th:text="${prato.descricao}">Descrição do prato.</p>
+                    <div class="food-bottom">
+                        <strong th:text="|R$ ${#numbers.formatDecimal(prato.preco, 1, 2, 'POINT', 'COMMA')}|">R$ 25,00</strong>
+                    </div>
+                    <div class="owner-dish-actions" th:if="${ehDono}">
+                        <form th:action="@{/cardapio/{empresaId}/pratos/{pratoId}/disponibilidade(empresaId=${empresa.id},pratoId=${prato.id})}"
+                              method="post">
+                            <button class="secondary-button" type="submit"
+                                    th:text="${prato.disponivel ? 'Marcar indisponível' : 'Marcar disponível'}">
+                                Marcar indisponível
+                            </button>
+                        </form>
+                        <form th:action="@{/cardapio/{empresaId}/pratos/{pratoId}/remover(empresaId=${empresa.id},pratoId=${prato.id})}"
+                              method="post">
+                            <button class="remove-button" type="submit">Remover prato</button>
+                        </form>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+</main>
 
-        <h3>🥗 BuscaVeg</h3>
+<footer>
+    <h3>🥗 BuscaVeg</h3>
+    <p>Encontre opções vegetarianas e veganas perto de você.</p>
+    <p class="copyright">© 2026 BuscaVeg - Todos os direitos reservados.</p>
+</footer>
 
-        <p>
-            Encontre opções vegetarianas e veganas perto de você.
-        </p>
-
-        <p class="copyright">
-            © 2026 BuscaVeg - Todos os direitos reservados.
-        </p>
-
-    </footer>
-
+<script>
+    const formToggle = document.querySelector('#toggle-dish-form');
+    const dishForm = document.querySelector('.dish-form');
+    formToggle?.addEventListener('click', () => {
+        dishForm.classList.toggle('is-open');
+        if (dishForm.classList.contains('is-open')) {
+            document.querySelector('#dish-name').focus();
+        }
+    });
+</script>
 </body>
-
 </html>

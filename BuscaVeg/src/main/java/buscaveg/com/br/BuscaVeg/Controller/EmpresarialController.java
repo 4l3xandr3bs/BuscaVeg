@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import buscaveg.com.br.BuscaVeg.DTO.AlterarEmpresarialDTO;
 import buscaveg.com.br.BuscaVeg.DTO.CadastroEmpresarialDTO;
 import buscaveg.com.br.BuscaVeg.Entity.Empresarial;
+import buscaveg.com.br.BuscaVeg.Enum.EnumTipoEstabelecimento;
 import buscaveg.com.br.BuscaVeg.Excecao.RegraDeNegocioException;
 import buscaveg.com.br.BuscaVeg.Service.FavoritoService;
 import buscaveg.com.br.BuscaVeg.Service.EmpresarialService;
@@ -43,7 +45,7 @@ public class EmpresarialController {
 
         oModel.addAttribute("empresarial", new CadastroEmpresarialDTO());
 
-        return "cadastroEmp"; // templates/cadastrarEmpresa.html
+        return "cadastroEmp";
     }
 
   
@@ -59,21 +61,34 @@ public class EmpresarialController {
             // Mesmo tratamento do cadastro de usuário: volta ao formulário
             // com a mensagem de erro.
             oModel.addAttribute("erro", e.getMessage());
-            return "cadastrarEmpresa";
+            return "cadastroEmp";
         }
 
-        return "redirect:/empresarialCTR/login?cadastrado";
+        return "redirect:/usuarioCTR/login?cadastrado";
     }
 
     // GET /empresarialCTR/listarEmpresas
     // Lista todas as empresas (qualquer pessoa logada pode ver).
     @GetMapping("/listarEmpresas")
-    public String listarEmpresas(Authentication authentication, Model oModel) {
+    public String listarEmpresas(
+            Authentication authentication,
+            @RequestParam(required = false) String busca,
+            Model oModel) {
 
+        var empresas = oEmpresarialService.listarTodasEmpresas();
+        if (busca != null && !busca.isBlank()) {
+            String termo = busca.trim().toLowerCase(java.util.Locale.ROOT);
+            empresas = empresas.stream()
+                    .filter(empresa -> empresa.getNomeFantasia().toLowerCase(java.util.Locale.ROOT).contains(termo)
+                            || empresa.getEndereco().toLowerCase(java.util.Locale.ROOT).contains(termo)
+                            || empresa.getTipoEspecializacao().name().toLowerCase(java.util.Locale.ROOT).contains(termo))
+                    .toList();
+        }
         oModel.addAttribute(
                 "empresas",
-                oEmpresarialService.listarTodasEmpresas()
+                empresas
         );
+        oModel.addAttribute("busca", busca);
         oModel.addAttribute("favoritosIds", favoritoService.listarIdsFavoritos(authentication.getName()));
         oModel.addAttribute("ehUsuario", authentication.getAuthorities().stream()
                 .anyMatch(authority -> authority.getAuthority().equals("ROLE_USUARIO")));
@@ -82,16 +97,18 @@ public class EmpresarialController {
     }
 
     // GET /empresarialCTR/minhaEmpresa
-    // Atalho para a empresa logada: descobre qual é a empresa dela pelo
-    // e-mail e redireciona para a tela de edição. É para cá que o login
-    // leva as contas do tipo EMPRESA.
+    // Atalho para o perfil da empresa vinculada à conta autenticada.
     @GetMapping("/minhaEmpresa")
-    public String minhaEmpresa(Principal principal) {
+    public String minhaEmpresa() {
+        return "redirect:/empresarialCTR/perfil";
+    }
 
-        Empresarial empresa =
-                oEmpresarialService.buscarPorEmailDaConta(principal.getName());
-
-        return "redirect:/empresarialCTR/editarEmpresa/" + empresa.getId();
+    @GetMapping("/perfil")
+    public String perfilEmpresa(Principal principal, Model model) {
+        Empresarial empresa = oEmpresarialService.buscarPorEmailDaConta(principal.getName());
+        model.addAttribute("empresa", empresa);
+        model.addAttribute("email", principal.getName());
+        return "perfilEMP";
     }
 
     // GET /empresarialCTR/editarEmpresa/{id}
@@ -113,8 +130,10 @@ public class EmpresarialController {
                 "empresarial",
                 oEmpresarialService.montarDtoDeEdicao(empresa)
         );
+        oModel.addAttribute("empresa", empresa);
+        oModel.addAttribute("tiposEstabelecimento", EnumTipoEstabelecimento.values());
 
-        return "templates/editaEmpresa.html"; // templates/editarEmpresa.html
+        return "editaEmpresa";
     }
 
     // POST /empresarialCTR/alterarEmpresa/{id}
@@ -132,10 +151,13 @@ public class EmpresarialController {
         } catch (RegraDeNegocioException e) {
             oModel.addAttribute("erro", e.getMessage());
             oModel.addAttribute("empresaId", id);
-            return "editarEmpresa";
+            Empresarial empresa = oEmpresarialService.buscarEmpresaDoLogado(id, principal.getName());
+            oModel.addAttribute("empresa", empresa);
+            oModel.addAttribute("tiposEstabelecimento", EnumTipoEstabelecimento.values());
+            return "editaEmpresa";
         }
 
-        return "redirect:/empresarialCTR/listarEmpresas";
+        return "redirect:/empresarialCTR/perfil?atualizado";
     }
 
     // POST /empresarialCTR/deletarEmpresa/{id}
@@ -155,6 +177,6 @@ public class EmpresarialController {
         // continuar "logada" com uma conta que não existe mais.
         request.logout();
 
-        return "redirect:/empresarialCTR/login";
+        return "redirect:/usuarioCTR/login?logout";
     }
 }

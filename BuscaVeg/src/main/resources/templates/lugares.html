@@ -138,10 +138,11 @@
 <header>
     <div class="logo">🥗 BuscaVeg</div>
     <nav>
-        <a th:href="@{/empresarialCTR/listarEmpresas}">Início</a>
+        <a th:href="@{/site}">Início</a>
         <a th:href="@{/empresarialCTR/listarEmpresas}">Lugares</a>
-        <a th:href="@{/favoritos}">Favoritos</a>
-        <a th:href="@{/usuarioCTR/perfil}">Perfil</a>
+        <a th:if="${ehUsuario}" th:href="@{/favoritos}">Favoritos</a>
+        <a th:if="${ehUsuario}" th:href="@{/usuarioCTR/perfil}">Perfil</a>
+        <a th:unless="${ehUsuario}" th:href="@{/empresarialCTR/perfil}">Perfil do estabelecimento</a>
     </nav>
 </header>
 
@@ -159,8 +160,10 @@
         </div>
 
         <div class="places-container" th:if="${empresas != null}">
+            <p class="search-summary" th:if="${busca != null and !#strings.isEmpty(busca.trim())}"
+               th:text="|Resultados para “${busca}”|">Resultados da busca</p>
             <div th:if="${#lists.isEmpty(empresas)}" class="empty-state">
-                Nenhum lugar encontrado.
+                Nenhum lugar encontrado. Tente outro nome, endereço ou tipo.
             </div>
 
             <div class="place-card" th:each="empresa : ${empresas}"
@@ -172,6 +175,12 @@
                     <h3 th:text="${empresa.nomeFantasia}">Nome do estabelecimento</h3>
                     <p th:text="${empresa.endereco}">Endereço</p>
                     <p th:text="${empresa.telefone}">Telefone</p>
+
+                    <a class="menu-link"
+                       th:if="${empresa.tipoEspecializacao.name() == 'RESTAURANTE'}"
+                       th:href="@{/cardapio/{id}(id=${empresa.id})}">
+                        Ver cardápio
+                    </a>
 
                     <form th:action="@{/favoritos/{id}(id=${empresa.id})}" method="post">
                         <button class="favorite-btn" type="submit"

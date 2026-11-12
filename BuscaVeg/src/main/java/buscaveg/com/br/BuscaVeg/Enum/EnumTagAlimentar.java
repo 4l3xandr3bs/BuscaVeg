@@ -3,14 +3,23 @@ package buscaveg.com.br.BuscaVeg.Enum;
 /**
  * Etiquetas (tags) que descrevem o que um produto ou estabelecimento oferece.
  *
- * STATUS: ainda NÃO é usado por nenhuma entidade. Foi criado para uso futuro
- * (por exemplo, filtrar lugares "sem glúten" ou "orgânicos" na busca).
+ * Etiquetas aplicadas a pratos para informar compatibilidade e características.
  */
 public enum EnumTagAlimentar {
 
-    VEGANO,
-    VEGETARIANO,
-    SEM_GLUTEN,
-    SEM_LACTOSE,
-    ORGANICO
+    VEGANO("Vegano"),
+    VEGETARIANO("Vegetariano"),
+    SEM_GLUTEN("Sem glúten"),
+    SEM_LACTOSE("Sem lactose"),
+    ORGANICO("Orgânico");
+
+    private final String descricao;
+
+    EnumTagAlimentar(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
 }

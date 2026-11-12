@@ -4,9 +4,9 @@ Sistema web para **encontrar restaurantes e mercados com opções veganas e vege
 Pessoas se cadastram informando seu perfil alimentar e localização; estabelecimentos se
 cadastram para serem encontrados.
 
-> **Status:** em desenvolvimento. Já existem cadastro e login de pessoas e de empresas,
-> edição/exclusão da própria empresa e listagem de empresas. A busca com filtros,
-> avaliações, cardápio e status em tempo real ainda não foram implementados
+> **Status:** em desenvolvimento. Já existem cadastro/login, perfis de pessoas e empresas,
+> listagem e busca de estabelecimentos, favoritos por usuário e cardápios com filtragem por
+> perfil alimentar. Avaliações e status em tempo real ainda não foram implementados
 > (veja "Diagrama x código").
 
 ## Tecnologias
@@ -93,28 +93,44 @@ completo (inclusive o que ainda falta implementar) está em
 | `/usuarioCTR/login` | GET | Público | Tela de login |
 | `/login` | POST | Público | Processado pelo Spring Security |
 | `/logout` | POST | Logado | Sai do sistema |
+| `/` ou `/site` | GET | Logado | Página inicial |
 | `/empresarialCTR/formCadastrarEmpresa` | GET | Público | Tela de cadastro de empresa |
 | `/empresarialCTR/salvarEmpresa` | POST | Público | Cria Conta (EMPRESA) + Empresarial |
-| `/empresarialCTR/listarEmpresas` | GET | Logado | Lista as empresas |
-| `/empresarialCTR/minhaEmpresa` | GET | EMPRESA | Atalho para editar a própria empresa |
+| `/empresarialCTR/listarEmpresas?busca=...` | GET | Logado | Lista/busca empresas; restaurantes levam ao cardápio |
+| `/usuarioCTR/perfil` | GET/POST | USUARIO | Exibe e atualiza o perfil da pessoa |
+| `/favoritos` | GET | USUARIO | Lista favoritos da pessoa |
+| `/favoritos/{id}` | POST | USUARIO | Adiciona estabelecimento aos favoritos |
+| `/favoritos/{id}/remover` | POST | USUARIO | Remove estabelecimento dos favoritos |
+| `/empresarialCTR/minhaEmpresa` | GET | EMPRESA | Abre o perfil do próprio estabelecimento |
+| `/empresarialCTR/perfil` | GET | EMPRESA | Exibe o perfil da empresa autenticada |
 | `/empresarialCTR/editarEmpresa/{id}` | GET | EMPRESA (dona) | Formulário de edição |
 | `/empresarialCTR/alterarEmpresa/{id}` | POST | EMPRESA (dona) | Salva a edição |
 | `/empresarialCTR/deletarEmpresa/{id}` | POST | EMPRESA (dona) | Apaga empresa e conta |
+| `/cardapio/{id}` | GET | Logado | Exibe pratos disponíveis compatíveis com o perfil alimentar |
+| `/cardapio/empresa` | GET | EMPRESA | Abre o cardápio do estabelecimento autenticado |
+| `/cardapio/{id}/pratos` | POST | EMPRESA (dona) | Adiciona prato ao próprio cardápio |
+| `/cardapio/{id}/pratos/{pratoId}/disponibilidade` | POST | EMPRESA (dona) | Alterna a disponibilidade do prato |
+| `/cardapio/{id}/pratos/{pratoId}/remover` | POST | EMPRESA (dona) | Remove prato do cardápio |
 
 Depois do login: conta **EMPRESA** vai para `/empresarialCTR/minhaEmpresa`;
-conta **USUARIO** vai para `/empresarialCTR/listarEmpresas`.
+conta **USUARIO** vai para `/usuarioCTR/perfil`. Do site, a pessoa abre Lugares e,
+em um restaurante, seleciona Ver cardápio. Somente a empresa proprietária pode gerenciar
+seus pratos e informações.
 
-## Contrato das telas (para quem for criar o HTML)
+## Contrato das telas
 
-As telas ficam em `src/main/resources/templates/` e **ainda não existem**. Cada uma deve ter:
+As telas ficam em `src/main/resources/templates/`. Os formulários usam `th:action`
+para manter a proteção CSRF ativa.
 
 | Arquivo | Objeto / dados | Campos (`th:field`) ou ação |
 |---|---|---|
 | `login.html` | — | `<form method="post" th:action="@{/login}">` com campos `username` (o e-mail) e `password`; mensagens para `?error`, `?logout`, `?cadastrado` |
 | `cadastrarUsuario.html` | `th:object="${usuario}"` | `nome`, `email`, `password`, `dataNascimento`, `perfilAlimentar`, `latitude`, `longitude`; ação `@{/usuarioCTR/salvarUsuario}`; mostrar `${erro}` |
 | `cadastrarEmpresa.html` | `th:object="${empresarial}"` | `email`, `password`, `cnpj`, `nomeFantasia`, `razaoSocial`, `endereco`, `telefone`, `latitude`, `longitude`, `tipoEspecializacao`; ação `@{/empresarialCTR/salvarEmpresa}`; mostrar `${erro}` |
-| `listarEmpresas.html` | `${empresas}` | percorrer a lista com `th:each` |
-| `editarEmpresa.html` | `th:object="${empresarial}"`, `${empresaId}` | `nomeFantasia`, `razaoSocial`, `endereco`, `telefone`, `latitude`, `longitude`, `tipoEspecializacao`; ação `@{/empresarialCTR/alterarEmpresa/{id}(id=${empresaId})}`; botão de excluir = **form POST** para `@{/empresarialCTR/deletarEmpresa/{id}(id=${empresaId})}` |
+| `lugares.html` | `${empresas}` | Lista estabelecimentos e links para cardápios de restaurantes |
+| `editaEmpresa.html` | `th:object="${empresarial}"`, `${empresaId}` | Edita nome, razão social, endereço, telefone e tipo; CNPJ e e-mail são exibidos como dados da conta |
+| `perfilEMP.html` | `${empresa}` | Exibe apenas a empresa autenticada e oferece edição e gerenciamento do cardápio |
+| `cardapio.html` | `${empresa}`, `${pratos}`, `${perfilAlimentar}` | Lista pratos disponíveis compatíveis com a dieta; proprietários podem adicionar, pausar e remover pratos |
 
 Use sempre `th:action` nos formulários: com ele o Thymeleaf inclui o token CSRF
 automaticamente (a proteção CSRF está **ativa**). O botão "Sair" também precisa ser um
@@ -133,24 +149,25 @@ formulário POST para `/logout`.
 | Parte do diagrama | Situação no código |
 |---|---|
 | `Conta` | Pronto |
-| `Usuario` (dados e cadastro) | Pronto. Métodos de busca, avaliação e favorito: pendentes |
+| `Usuario` (dados, cadastro, perfil e favoritos) | Pronto para os fluxos de perfil e favoritos |
 | `Empresarial` (dados, cadastro, edição, exclusão) | Pronto |
 | `Empresarial.indiceVegFriendly` | Coluna existe; o **cálculo** (a partir do cardápio) está pendente |
 | `Empresarial`: `horarioAbertura`, `horarioFechamento`, `protocoloRestricoes`, `notaMedia` | Pendente |
-| `ItemCardapio` (composição, 0..*) | Pendente (`tags` será `@ElementCollection`) |
+| `PratoCardapio` (composição, 0..*) | Pronto com preço, disponibilidade e etiquetas alimentares |
 | `StatusDeTempoReal` (composição, 1) | Pendente (há um trecho comentado em `Empresarial`) |
 | `Avaliacao` (Usuario 1 — * Avaliacao * — 1 Empresarial) | Pendente |
-| Favoritos (Usuario * — * Empresarial) | Pendente (`@ManyToMany`) |
+| Favoritos (Usuario * — * Empresarial) | Pronto (`@ManyToMany`) |
 | `FiltroBusca` | Pendente (usa a localização para calcular distância) |
-| `EnumTagAlimentar`, `EnumNivelLotacao` | Criados, ainda sem uso |
+| `EnumTagAlimentar` | Usado nos pratos para filtrar cardápios por perfil |
+| `EnumNivelLotacao` | Criado, ainda sem uso |
 
 ## Pendências conhecidas
 
-1. **Telas:** a pasta `templates/` não existe (veja "Contrato das telas").
-2. **Banco:** faltam as linhas `spring.datasource.*` no `application.properties`.
-3. **Validação:** hoje só há checagem de campos obrigatórios, e-mail/CNPJ repetidos e tamanho do nome.
+1. **Banco:** o MySQL local e o banco `buscaveg` precisam estar disponíveis; ajuste a conexão
+   no `application.properties` para o ambiente utilizado.
+2. **Validação:** há checagem de campos obrigatórios, e-mail/CNPJ repetidos e tamanhos de campos.
    Falta validar formato de e-mail, CNPJ e força da senha (próximo passo: Bean Validation,
    `spring-boot-starter-validation`).
-4. Não há tela/rota para trocar senha ou e-mail da conta.
-5. Não há administrador; ninguém consegue listar ou moderar usuários.
-6. Testes automatizados: apenas o `contextLoads` padrão do Spring (que exige o banco).
+3. Não há tela/rota para trocar senha ou e-mail da conta.
+4. Não há administrador; ninguém consegue listar ou moderar usuários.
+5. Ainda não há testes automatizados para os fluxos da aplicação.

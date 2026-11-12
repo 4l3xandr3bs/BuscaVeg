@@ -263,6 +263,22 @@
       padding: 10px 12px;
   }
 
+ .menu-link {
+      background: #43a047;
+      border-radius: 7px;
+      color: white;
+      display: inline-block;
+      font-weight: bold;
+      margin: 8px 0;
+      padding: 10px 12px;
+      text-decoration: none;
+  }
+
+ .menu-link:hover {
+      background: #2e7d32;
+      color: white;
+  }
+
  .favorite-btn.is-favorite {
       background: #e8f5e9;
       color: #245c29;

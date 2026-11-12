@@ -1,197 +1,84 @@
 <!DOCTYPE html>
-
-<html lang="pt-BR">
-
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-```
-<title>BuscaVeg - menu Buisness</title>
-
-<link rel="stylesheet" href="/css/pedidos.css">
-```
-
+    <title>BuscaVeg - Perfil do estabelecimento</title>
+    <link rel="stylesheet" th:href="@{/estilo.css}">
+    <link rel="stylesheet" th:href="@{/perfil-empresa.css}">
 </head>
-
 <body>
-
-```
 <header>
-
-    <div class="logo">
-        🥗 BuscaVeg
-    </div>
-
-    <nav>
-        <a href="site.html">Início</a>
-        <a href="lugares.html">Lugares</a>
-        <a href="favoritos.html">Favoritos</a>
-        <a href="pedidos.html">Pedidos</a>
-        <a href="perfil.html">Perfil</a>
+    <div class="logo">🥗 BuscaVeg</div>
+    <nav aria-label="Navegação principal">
+        <a th:href="@{/empresarialCTR/listarEmpresas}">Lugares</a>
+        <a th:href="@{/cardapio/empresa}">Gerenciar cardápio</a>
+        <a th:href="@{/empresarialCTR/perfil}" aria-current="page">Meu estabelecimento</a>
+        <form th:action="@{/logout}" method="post">
+            <button class="nav-logout" type="submit">Sair</button>
+        </form>
     </nav>
-
 </header>
 
-<main>
-
+<main class="business-profile-page">
     <section class="hero">
-
-        <h1>Meus Pedidos 🛒</h1>
-
-        <p>
-            Acompanhe seus pedidos realizados pelo BuscaVeg.
-        </p>
-
+        <p class="eyebrow">Área do estabelecimento</p>
+        <h1>Perfil do estabelecimento</h1>
+        <p>Consulte seus dados e gerencie as informações que aparecem no BuscaVeg.</p>
     </section>
 
-    <section class="orders">
+    <div th:if="${param.atualizado}" class="notice notice-success" role="status">
+        Informações do estabelecimento atualizadas.
+    </div>
 
-        <h2>Pedidos recentes</h2>
-
-        <div class="order-card">
-
-            <div class="order-header">
-
-                <div>
-                    <h3>Green Garden</h3>
-                    <p>Pedido #1001</p>
-                </div>
-
-                <span class="status">
-                    Entregue
-                </span>
-
+    <section class="business-card">
+        <div class="business-card-heading">
+            <div>
+                <span class="tag" th:text="${empresa.tipoEspecializacao}">RESTAURANTE</span>
+                <h2 th:text="${empresa.nomeFantasia}">Nome do estabelecimento</h2>
+                <p th:text="${empresa.razaoSocial}">Razão social</p>
             </div>
-
-            <div class="order-items">
-
-                <p>
-                    🥗 Hambúrguer Vegano
-                    <span>R$ 28,00</span>
-                </p>
-
-                <p>
-                    🥤 Suco Natural
-                    <span>R$ 10,00</span>
-                </p>
-
-            </div>
-
-            <div class="order-footer">
-
-                <strong>
-                    Total: R$ 38,00
-                </strong>
-
-                <button>
-                    Ver pedido
-                </button>
-
-            </div>
-
+            <a class="primary-button"
+               th:href="@{/empresarialCTR/editarEmpresa/{id}(id=${empresa.id})}">
+                Editar informações
+            </a>
         </div>
 
-        <div class="order-card">
-
-            <div class="order-header">
-
-                <div>
-                    <h3>Veggie Burger</h3>
-                    <p>Pedido #1002</p>
-                </div>
-
-                <span class="status preparing">
-                    Em preparo
-                </span>
-
+        <dl class="business-details">
+            <div>
+                <dt>E-mail da conta</dt>
+                <dd th:text="${email}">contato@exemplo.com</dd>
             </div>
-
-            <div class="order-items">
-
-                <p>
-                    🍔 Veggie Burger
-                    <span>R$ 25,00</span>
-                </p>
-
-                <p>
-                    🍟 Batata Frita
-                    <span>R$ 12,00</span>
-                </p>
-
+            <div>
+                <dt>CNPJ</dt>
+                <dd th:text="${empresa.cnpj}">00.000.000/0000-00</dd>
             </div>
-
-            <div class="order-footer">
-
-                <strong>
-                    Total: R$ 37,00
-                </strong>
-
-                <button>
-                    Acompanhar pedido
-                </button>
-
+            <div>
+                <dt>Telefone</dt>
+                <dd th:text="${empresa.telefone}">Telefone</dd>
             </div>
-
-        </div>
-
-        <div class="order-card">
-
-            <div class="order-header">
-
-                <div>
-                    <h3>Pizza Verde</h3>
-                    <p>Pedido #1003</p>
-                </div>
-
-                <span class="status canceled">
-                    Cancelado
-                </span>
-
+            <div>
+                <dt>Endereço</dt>
+                <dd th:text="${empresa.endereco}">Endereço</dd>
             </div>
-
-            <div class="order-items">
-
-                <p>
-                    🍕 Pizza Vegana
-                    <span>R$ 45,00</span>
-                </p>
-
-            </div>
-
-            <div class="order-footer">
-
-                <strong>
-                    Total: R$ 45,00
-                </strong>
-
-                <button>
-                    Ver pedido
-                </button>
-
-            </div>
-
-        </div>
-
+        </dl>
     </section>
 
+    <section class="business-actions">
+        <div>
+            <p class="eyebrow">Seus produtos</p>
+            <h2>Cardápio</h2>
+            <p>Cadastre pratos, informe etiquetas alimentares e atualize a disponibilidade.</p>
+        </div>
+        <a class="secondary-button"
+           th:href="@{/cardapio/{id}(id=${empresa.id})}">Gerenciar cardápio</a>
+    </section>
 </main>
 
 <footer>
-
     <h3>🥗 BuscaVeg</h3>
-
-    <p>
-        Encontre opções vegetarianas e veganas perto de você.
-    </p>
-
-    <p class="copyright">
-        © 2026 BuscaVeg - Todos os direitos reservados.
-    </p>
-
+    <p>Conectando estabelecimentos a quem busca opções vegetais.</p>
+    <p class="copyright">© 2026 BuscaVeg - Todos os direitos reservados.</p>
 </footer>
-```
-
 </body>
-
 </html>
