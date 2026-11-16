@@ -30,14 +30,10 @@ public class UsuarioController {
     public UsuarioController(UsuarioService oUsuarioService) {
         this.oUsuarioService = oUsuarioService;
     }
-
     @GetMapping("/formCadastrarUsuario")
     public String telaCadastraUsuario(Model oModel) {
-
-   
         oModel.addAttribute("usuario", new CadastroUsuarioDTO());
-
-        return "templates/cadastro.html"; // abre templates/cadastrarUsuario.html
+        return "cadastro";
     }
 
     
