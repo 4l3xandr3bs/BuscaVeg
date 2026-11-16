@@ -21,7 +21,7 @@ import buscaveg.com.br.BuscaVeg.Service.FavoritoService;
 import buscaveg.com.br.BuscaVeg.Service.EmpresarialService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
-
+import org.springframework.beans.factory.annotation.Value;
 
 @Controller
 @RequestMapping("/empresarialCTR")
@@ -29,7 +29,11 @@ public class EmpresarialController {
 
     private final EmpresarialService oEmpresarialService;
     private final FavoritoService favoritoService;
-
+    @Value("${maptiler.api-key:}")
+    private String maptilerApiKey;
+    
+    @Value("${ors.api-key:}")
+    private String orsApiKey;
     public EmpresarialController(
             EmpresarialService oEmpresarialService,
             FavoritoService favoritoService) {
@@ -88,6 +92,8 @@ public class EmpresarialController {
                 "empresas",
                 empresas
         );
+        oModel.addAttribute("maptilerApiKey", maptilerApiKey);
+oModel.addAttribute("orsApiKey", orsApiKey);
         oModel.addAttribute("busca", busca);
         oModel.addAttribute("favoritosIds", favoritoService.listarIdsFavoritos(authentication.getName()));
         oModel.addAttribute("ehUsuario", authentication.getAuthorities().stream()
