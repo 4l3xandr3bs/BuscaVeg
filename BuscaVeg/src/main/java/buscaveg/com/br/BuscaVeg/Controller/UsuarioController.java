@@ -33,7 +33,8 @@ public class UsuarioController {
     @GetMapping("/formCadastrarUsuario")
     public String telaCadastraUsuario(Model oModel) {
         oModel.addAttribute("usuario", new CadastroUsuarioDTO());
-        return "cadastro";
+
+        return "cadastro"; // abre templates/cadastrarUsuario.html
     }
 
     
