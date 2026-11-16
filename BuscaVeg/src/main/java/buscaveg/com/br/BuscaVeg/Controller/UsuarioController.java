@@ -34,7 +34,7 @@ public class UsuarioController {
     public String telaCadastraUsuario(Model oModel) {
         oModel.addAttribute("usuario", new CadastroUsuarioDTO());
 
-        return "cadastro"; // abre templates/cadastrarUsuario.html
+        return "cadastro";
     }
 
     
