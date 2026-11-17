@@ -163,11 +163,5 @@ formulário POST para `/logout`.
 
 ## Pendências conhecidas
 
-1. **Banco:** o MySQL local e o banco `buscaveg` precisam estar disponíveis; ajuste a conexão
-   no `application.properties` para o ambiente utilizado.
-2. **Validação:** há checagem de campos obrigatórios, e-mail/CNPJ repetidos e tamanhos de campos.
-   Falta validar formato de e-mail, CNPJ e força da senha (próximo passo: Bean Validation,
-   `spring-boot-starter-validation`).
-3. Não há tela/rota para trocar senha ou e-mail da conta.
-4. Não há administrador; ninguém consegue listar ou moderar usuários.
-5. Ainda não há testes automatizados para os fluxos da aplicação.
+1. configurar lugares.html + alguns erros
+2. estilização das telas
