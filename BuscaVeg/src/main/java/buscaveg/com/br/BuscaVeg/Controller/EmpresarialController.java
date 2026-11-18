@@ -17,6 +17,7 @@ import buscaveg.com.br.BuscaVeg.DTO.CadastroEmpresarialDTO;
 import buscaveg.com.br.BuscaVeg.Entity.Empresarial;
 import buscaveg.com.br.BuscaVeg.Enum.EnumTipoEstabelecimento;
 import buscaveg.com.br.BuscaVeg.Excecao.RegraDeNegocioException;
+import buscaveg.com.br.BuscaVeg.Service.AvaliacaoService;
 import buscaveg.com.br.BuscaVeg.Service.FavoritoService;
 import buscaveg.com.br.BuscaVeg.Service.EmpresarialService;
 import jakarta.servlet.ServletException;
@@ -29,6 +30,7 @@ public class EmpresarialController {
 
     private final EmpresarialService oEmpresarialService;
     private final FavoritoService favoritoService;
+    private final AvaliacaoService avaliacaoService;
     @Value("${maptiler.api-key:}")
     private String maptilerApiKey;
     
@@ -36,10 +38,12 @@ public class EmpresarialController {
     private String orsApiKey;
     public EmpresarialController(
             EmpresarialService oEmpresarialService,
-            FavoritoService favoritoService) {
+            FavoritoService favoritoService,
+            AvaliacaoService avaliacaoService) {
 
         this.oEmpresarialService = oEmpresarialService;
         this.favoritoService = favoritoService;
+        this.avaliacaoService = avaliacaoService;
     }
 
     // GET /empresarialCTR/formCadastrarEmpresa
@@ -95,6 +99,7 @@ public class EmpresarialController {
         oModel.addAttribute("maptilerApiKey", maptilerApiKey);
 oModel.addAttribute("orsApiKey", orsApiKey);
         oModel.addAttribute("busca", busca);
+        oModel.addAttribute("resumosAvaliacoes", avaliacaoService.resumirEstabelecimentos());
         oModel.addAttribute("favoritosIds", favoritoService.listarIdsFavoritos(authentication.getName()));
         oModel.addAttribute("ehUsuario", authentication.getAuthorities().stream()
                 .anyMatch(authority -> authority.getAuthority().equals("ROLE_USUARIO")));

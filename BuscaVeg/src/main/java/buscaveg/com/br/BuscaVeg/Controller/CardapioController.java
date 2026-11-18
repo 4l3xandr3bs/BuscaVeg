@@ -1,6 +1,7 @@
 package buscaveg.com.br.BuscaVeg.Controller;
 
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -14,9 +15,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import buscaveg.com.br.BuscaVeg.DTO.PratoCardapioDTO;
 import buscaveg.com.br.BuscaVeg.Entity.Empresarial;
+import buscaveg.com.br.BuscaVeg.Entity.PratoCardapio;
 import buscaveg.com.br.BuscaVeg.Enum.EnumPerfilAlimentar;
 import buscaveg.com.br.BuscaVeg.Enum.EnumTagAlimentar;
 import buscaveg.com.br.BuscaVeg.Excecao.RegraDeNegocioException;
+import buscaveg.com.br.BuscaVeg.Service.AvaliacaoService;
 import buscaveg.com.br.BuscaVeg.Service.CardapioService;
 import buscaveg.com.br.BuscaVeg.Service.EmpresarialService;
 import buscaveg.com.br.BuscaVeg.Service.UsuarioService;
@@ -26,14 +29,17 @@ import buscaveg.com.br.BuscaVeg.Service.UsuarioService;
 public class CardapioController {
 
     private final CardapioService cardapioService;
+    private final AvaliacaoService avaliacaoService;
     private final EmpresarialService empresarialService;
     private final UsuarioService usuarioService;
 
     public CardapioController(
             CardapioService cardapioService,
+            AvaliacaoService avaliacaoService,
             EmpresarialService empresarialService,
             UsuarioService usuarioService) {
         this.cardapioService = cardapioService;
+        this.avaliacaoService = avaliacaoService;
         this.empresarialService = empresarialService;
         this.usuarioService = usuarioService;
     }
@@ -60,9 +66,11 @@ public class CardapioController {
         model.addAttribute("perfilAlimentar", perfil);
         model.addAttribute("tagsAlimentares", EnumTagAlimentar.values());
         model.addAttribute("prato", new PratoCardapioDTO());
-        model.addAttribute("pratos", ehDono
+        List<PratoCardapio> pratos = ehDono
                 ? cardapioService.listarTodos(empresarialId, authentication.getName())
-                : cardapioService.listarPratosDisponiveis(empresarialId, perfil));
+                : cardapioService.listarPratosDisponiveis(empresarialId, perfil);
+        model.addAttribute("pratos", pratos);
+        model.addAttribute("resumosAvaliacoes", avaliacaoService.resumirPratos(pratos));
         return "cardapio";
     }
 
@@ -122,6 +130,9 @@ public class CardapioController {
         model.addAttribute("ehEmpresa", true);
         model.addAttribute("perfilAlimentar", null);
         model.addAttribute("tagsAlimentares", EnumTagAlimentar.values());
-        model.addAttribute("pratos", cardapioService.listarTodos(empresarialId, principal.getName()));
+        List<PratoCardapio> pratos = cardapioService.listarTodos(
+                empresarialId, principal.getName());
+        model.addAttribute("pratos", pratos);
+        model.addAttribute("resumosAvaliacoes", avaliacaoService.resumirPratos(pratos));
     }
 }

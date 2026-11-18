@@ -6,8 +6,8 @@ cadastram para serem encontrados.
 
 > **Status:** em desenvolvimento. Já existem cadastro/login, perfis de pessoas e empresas,
 > listagem e busca de estabelecimentos, favoritos por usuário e cardápios com filtragem por
-> perfil alimentar. Avaliações e status em tempo real ainda não foram implementados
-> (veja "Diagrama x código").
+> perfil alimentar. Avaliações por estrelas nos pratos já são persistidas e exibidas
+> nos cardápios e na lista de restaurantes; status em tempo real ainda não foi implementado.
 
 ## Tecnologias
 
@@ -111,6 +111,8 @@ completo (inclusive o que ainda falta implementar) está em
 | `/cardapio/{id}/pratos` | POST | EMPRESA (dona) | Adiciona prato ao próprio cardápio |
 | `/cardapio/{id}/pratos/{pratoId}/disponibilidade` | POST | EMPRESA (dona) | Alterna a disponibilidade do prato |
 | `/cardapio/{id}/pratos/{pratoId}/remover` | POST | EMPRESA (dona) | Remove prato do cardápio |
+| `/avaliacoes?pratoId={id}` | GET | USUARIO | Abre a avaliação por estrelas de um prato |
+| `/avaliacoes` | POST | USUARIO | Cria ou atualiza a nota (1 a 5) do usuário para o prato |
 
 Depois do login: conta **EMPRESA** vai para `/empresarialCTR/minhaEmpresa`;
 conta **USUARIO** vai para `/usuarioCTR/perfil`. Do site, a pessoa abre Lugares e,
@@ -131,6 +133,7 @@ para manter a proteção CSRF ativa.
 | `editaEmpresa.html` | `th:object="${empresarial}"`, `${empresaId}` | Edita nome, razão social, endereço, telefone e tipo; CNPJ e e-mail são exibidos como dados da conta |
 | `perfilEMP.html` | `${empresa}` | Exibe apenas a empresa autenticada e oferece edição e gerenciamento do cardápio |
 | `cardapio.html` | `${empresa}`, `${pratos}`, `${perfilAlimentar}` | Lista pratos disponíveis compatíveis com a dieta; proprietários podem adicionar, pausar e remover pratos |
+| `avaliacoes.html` | `${prato}`, `${resumo}`, `${notaAtual}` | Cria ou atualiza somente a avaliação por estrelas do prato |
 
 Use sempre `th:action` nos formulários: com ele o Thymeleaf inclui o token CSRF
 automaticamente (a proteção CSRF está **ativa**). O botão "Sair" também precisa ser um
@@ -155,7 +158,7 @@ formulário POST para `/logout`.
 | `Empresarial`: `horarioAbertura`, `horarioFechamento`, `protocoloRestricoes`, `notaMedia` | Pendente |
 | `PratoCardapio` (composição, 0..*) | Pronto com preço, disponibilidade e etiquetas alimentares |
 | `StatusDeTempoReal` (composição, 1) | Pendente (há um trecho comentado em `Empresarial`) |
-| `Avaliacao` (Usuario 1 — * Avaliacao * — 1 Empresarial) | Pendente |
+| `Avaliacao` (Usuario 1 — * Avaliacao * — 1 PratoCardapio) | Persistida com uma nota de 1 a 5 por usuário e prato |
 | Favoritos (Usuario * — * Empresarial) | Pronto (`@ManyToMany`) |
 | `FiltroBusca` | Pendente (usa a localização para calcular distância) |
 | `EnumTagAlimentar` | Usado nos pratos para filtrar cardápios por perfil |

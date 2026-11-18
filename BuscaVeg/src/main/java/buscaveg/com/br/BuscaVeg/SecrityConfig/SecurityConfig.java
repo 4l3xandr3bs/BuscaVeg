@@ -34,6 +34,9 @@ public class SecurityConfig {
                         .requestMatchers("/favoritos", "/favoritos/**")
                         .hasRole("USUARIO")
 
+                        .requestMatchers("/avaliacoes", "/avaliacoes/**")
+                        .hasRole("USUARIO")
+
                         .requestMatchers("/cardapio/empresa", "/cardapio/empresa/**")
                         .hasRole("EMPRESA")
 

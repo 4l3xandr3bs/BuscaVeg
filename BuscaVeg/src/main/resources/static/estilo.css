@@ -20,7 +20,7 @@
 
  header {
      height: 75px;
-     background: white;
+     background: #71ad18;
      display: flex;
      align-items: center;
      justify-content: space-between;
@@ -902,6 +902,69 @@ main {
         align-items: stretch;
         flex-direction: column;
     }
+}
+/* ===========
+AVALIAÇÃO
+================*/
+.food-rating,
+.place-rating {
+    color: #8a5a00;
+    font-weight: bold;
+}
+
+.rate-dish-link,
+.menu-link {
+    display: inline-block;
+    margin: 8px 0;
+    color: #2e7d32;
+    font-weight: bold;
+}
+
+.star-review-form {
+    margin: 24px 0;
+}
+
+.star-review-form fieldset {
+    border: 0;
+    padding: 0;
+}
+
+.star-review-form legend {
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.star-rating {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}
+
+.star-rating input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+}
+
+.star-rating label {
+    color: #aab4aa;
+    cursor: pointer;
+    font-size: 2.5rem;
+    line-height: 1;
+    padding-right: 4px;
+}
+
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #f5b301;
+}
+
+.star-rating input:focus-visible + label {
+    outline: 2px solid #2e7d32;
+    outline-offset: 3px;
 }
 
 /* =========================================

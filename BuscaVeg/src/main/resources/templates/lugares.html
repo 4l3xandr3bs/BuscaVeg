@@ -18,7 +18,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 18px 28px;
-            background: white;
+            background: #71ad18;
             box-shadow: 0 2px 10px rgba(0,0,0,.08);
         }
         .logo {
@@ -125,6 +125,16 @@
             font-weight: bold;
             padding: 12px 0;
         }
+        .place-rating {
+            color: #8a5a00;
+            font-weight: bold;
+        }
+        .menu-link {
+            display: inline-block;
+            margin: 8px 0;
+            color: #2e7d32;
+            font-weight: bold;
+        }
         @media (max-width: 800px) {
             nav { display: none; }
             main { width: 90%; }
@@ -136,7 +146,7 @@
 <body>
 
 <header>
-    <div class="logo">🥗 BuscaVeg</div>
+    <div class="logo"> <img src="/static/BUSCAVEG.png"></div>
     <nav>
         <a th:href="@{/site}">Início</a>
         <a th:href="@{/empresarialCTR/listarEmpresas}">Lugares</a>
@@ -172,15 +182,28 @@
 
                 <div class="place-info">
                     <span class="tag" th:text="${empresa.tipoEspecializacao}">TIPO</span>
-                    <h3 th:text="${empresa.nomeFantasia}">Nome do estabelecimento</h3>
+                    <h3>
+                        <a th:if="${empresa.tipoEspecializacao != null and empresa.tipoEspecializacao.name() == 'RESTAURANTE'}"
+                           th:href="@{/cardapio/{id}(id=${empresa.id})}"
+                           th:text="${empresa.nomeFantasia}">Nome do estabelecimento</a>
+                        <span th:unless="${empresa.tipoEspecializacao != null and empresa.tipoEspecializacao.name() == 'RESTAURANTE'}"
+                              th:text="${empresa.nomeFantasia}">Nome do estabelecimento</span>
+                    </h3>
                     <p th:text="${empresa.endereco}">Endereço</p>
                     <p th:text="${empresa.telefone}">Telefone</p>
+                    <p class="place-rating"
+                       th:if="${empresa.tipoEspecializacao != null and empresa.tipoEspecializacao.name() == 'RESTAURANTE'}"
+                       th:with="resumo=${resumosAvaliacoes[empresa.id]}">
+                        <span th:if="${resumo != null}"
+                              th:text="|★ ${#numbers.formatDecimal(resumo.media, 1, 1)} · ${resumo.quantidade} avaliações dos pratos|">
+                           
+                        </span>
+                        <span th:unless="${resumo != null}">Ainda sem avaliações dos pratos</span>
+                    </p>
 
                     <a class="menu-link"
-     th:if="${empresa.tipoEspecializacao != null and empresa.tipoEspecializacao.name() == 'RESTAURANTE'}"
-   th:href="@{/cardapio/{id}(id=${empresa.id})}">
-    Ver cardápio
-</a>
+                       th:if="${empresa.tipoEspecializacao != null and empresa.tipoEspecializacao.name() == 'RESTAURANTE'}"
+                       th:href="@{/cardapio/{id}(id=${empresa.id})}">Ver cardápio</a>
 
 <form th:action="@{/favoritos/{id}(id=${empresa.id})}" method="post">
     <button class="favorite-btn" type="submit"

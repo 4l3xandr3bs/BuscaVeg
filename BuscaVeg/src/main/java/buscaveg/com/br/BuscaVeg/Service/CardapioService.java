@@ -15,6 +15,7 @@ import buscaveg.com.br.BuscaVeg.Entity.PratoCardapio;
 import buscaveg.com.br.BuscaVeg.Enum.EnumPerfilAlimentar;
 import buscaveg.com.br.BuscaVeg.Enum.EnumTagAlimentar;
 import buscaveg.com.br.BuscaVeg.Excecao.RegraDeNegocioException;
+import buscaveg.com.br.BuscaVeg.Repository.AvaliacaoRepository;
 import buscaveg.com.br.BuscaVeg.Repository.EmpresarialRepository;
 import buscaveg.com.br.BuscaVeg.Repository.PratoCardapioRepository;
 
@@ -23,12 +24,15 @@ public class CardapioService {
 
     private final EmpresarialRepository empresarialRepository;
     private final PratoCardapioRepository pratoRepository;
+    private final AvaliacaoRepository avaliacaoRepository;
 
     public CardapioService(
             EmpresarialRepository empresarialRepository,
-            PratoCardapioRepository pratoRepository) {
+            PratoCardapioRepository pratoRepository,
+            AvaliacaoRepository avaliacaoRepository) {
         this.empresarialRepository = empresarialRepository;
         this.pratoRepository = pratoRepository;
+        this.avaliacaoRepository = avaliacaoRepository;
     }
 
     @Transactional(readOnly = true)
@@ -76,11 +80,14 @@ public class CardapioService {
     @Transactional
     public void removerPrato(Long empresarialId, Long pratoId, String emailDono) {
         exigirDono(empresarialId, emailDono);
-        pratoRepository.delete(buscarPratoDoEstabelecimento(pratoId, empresarialId));
+        PratoCardapio prato = buscarPratoDoEstabelecimento(pratoId, empresarialId);
+        avaliacaoRepository.deleteByPratoId(pratoId);
+        pratoRepository.delete(prato);
     }
 
     @Transactional
     public void removerCardapioDoEstabelecimento(Long empresarialId) {
+        avaliacaoRepository.deleteByEmpresarialId(empresarialId);
         pratoRepository.deleteByEmpresarialId(empresarialId);
     }
 
