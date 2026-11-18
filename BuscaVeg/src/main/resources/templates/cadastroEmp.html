@@ -6,7 +6,7 @@
     <title>BuscaVeg - Cadastro da Empresa</title>
     <link rel="stylesheet" th:href="@{/estilo.css}">
 </head>
-<body>
+<body class="pagina-cadastro">
 
 <div class="cadastro-container">
     <div class="logo">🥗</div>
@@ -52,8 +52,40 @@
     </form>
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('form');
+        const enderecoInput = document.getElementById('endereco');
+        const latInput = document.getElementById('latitude');
+        const lngInput = document.getElementById('longitude');
 
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
 
+            const endereco = enderecoInput.value.trim();
+            if (!endereco) {
+                alert('Informe o endereço.');
+                return;
+            }
+
+            fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&q=${encodeURIComponent(endereco)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (!data || data.length === 0) {
+                        alert('Endereço não encontrado.');
+                        return;
+                    }
+
+                    latInput.value = data[0].lat;
+                    lngInput.value = data[0].lon;
+                    form.submit();
+                })
+                .catch(() => {
+                    alert('Erro ao geocodificar endereço.');
+                });
+        });
+    });
+</script>
 
 </body>
 </html>

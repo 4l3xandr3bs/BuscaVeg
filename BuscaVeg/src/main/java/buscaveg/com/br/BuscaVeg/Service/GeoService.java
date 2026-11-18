@@ -23,16 +23,24 @@ public class GeoService {
                     "Informe o endereço para localizar sua posição.");
         }
 
-        String url = UriComponentsBuilder
-                .fromUriString("https://nominatim.openstreetmap.org/search")
-                .queryParam("format", "jsonv2")
-                .queryParam("limit", "1")
-                .queryParam("addressdetails", "1")
-                .queryParam("countrycodes", "br")
-                .queryParam("q", endereco.trim() + ", Brasil")
-                .build()
-                .encode()
-                .toUriString();
+        
+String consulta = endereco.trim();
+
+if (!consulta.toLowerCase(java.util.Locale.ROOT)
+        .matches(".*\\b(brasil|brazil)\\b.*")) {
+    consulta += ", Brasil";
+}
+
+java.net.URI url = UriComponentsBuilder
+        .fromUriString("https://nominatim.openstreetmap.org/search")
+        .queryParam("format", "jsonv2")
+        .queryParam("limit", "1")
+        .queryParam("countrycodes", "br")
+        .queryParam("q", consulta)
+        .encode()
+        .build()
+        .toUri();
+
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("User-Agent", "BuscaVeg/1.0 (contato@seudominio.com)");
@@ -46,10 +54,17 @@ public class GeoService {
                     Map[].class);
 
             Map[] results = response.getBody();
+            
             if (results == null || results.length == 0) {
                 throw new RegraDeNegocioException(
                         "Não foi possível localizar este endereço.");
             }
+
+
+
+
+
+
 
             Object latValue = results[0].get("lat");
             Object lonValue = results[0].get("lon");

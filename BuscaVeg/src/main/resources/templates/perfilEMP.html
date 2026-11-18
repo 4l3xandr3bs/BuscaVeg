@@ -53,6 +53,64 @@
                 <dt>CNPJ</dt>
                 <dd th:text="${empresa.cnpj}">00.000.000/0000-00</dd>
             </div>
+
+<div class="empresa-page">
+    <main class="empresa-container">
+
+        <header class="empresa-header">
+            <span>Área do estabelecimento</span>
+            <h1>Perfil do estabelecimento</h1>
+            <p>Consulte seus dados e gerencie as informações que aparecem no BuscaVeg.</p>
+        </header>
+
+        <section class="empresa-card">
+            <div class="empresa-identificacao">
+                <div>
+                    <span class="empresa-tipo">Restaurante</span>
+                    <h2>Nome do estabelecimento</h2>
+                    <p>Descrição do estabelecimento</p>
+                </div>
+                <a href="/empresarialCTR/editarEmpresa/ID"
+                   class="empresa-btn">
+                    Editar informações
+                </a>
+            </div>
+
+            <div class="empresa-dados">
+                <div class="empresa-dado">
+                    <span>E-mail da conta</span>
+                    <strong>E-mail cadastrado</strong>
+                </div>
+                <div class="empresa-dado">
+                    <span>CNPJ</span>
+                    <strong>CNPJ cadastrado</strong>
+                </div>
+                <div class="empresa-dado">
+                    <span>Telefone</span>
+                    <strong>Telefone cadastrado</strong>
+                </div>
+                <div class="empresa-dado">
+                    <span>Endereço</span>
+                    <strong>Endereço cadastrado</strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="empresa-card">
+            <div class="empresa-secao">
+                <div>
+                    <h2>Cardápio</h2>
+                    <p>Cadastre pratos, informe etiquetas alimentares e atualize a disponibilidade.</p>
+                </div>
+                <a href="/cardapio" class="empresa-btn">
+                    Gerenciar cardápio
+                </a>
+            </div>
+        </section>
+
+    </main>
+</div>
+
             <div>
                 <dt>Telefone</dt>
                 <dd th:text="${empresa.telefone}">Telefone</dd>

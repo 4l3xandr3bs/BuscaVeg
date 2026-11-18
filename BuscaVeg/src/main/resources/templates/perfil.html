@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -5,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BuscaVeg - Meu perfil</title>
     <link rel="stylesheet" th:href="@{/estilo.css}">
-    
 </head>
 <body>
 <header>
@@ -59,6 +59,67 @@
             </dl>
         </div>
 
+        <div class="perfil-page">
+            <main class="perfil-container">
+        
+                <header class="perfil-header">
+                    <h1>Meu perfil</h1>
+                    <p>Consulte e atualize suas informações pessoais do BuscaVeg.</p>
+                </header>
+        
+                <section class="perfil-card">
+                    <div class="perfil-identificacao">
+                        <div>
+                            <span class="perfil-etiqueta">Suas informações</span>
+                            <h2>Nome do usuário</h2>
+                            <p>Informações da sua conta</p>
+                        </div>
+                        <a href="#editar" class="perfil-btn">Editar perfil</a>
+                    </div>
+        
+                    <div class="perfil-dados">
+                        <div class="perfil-dado">
+                            <span>E-mail</span>
+                            <strong>Seu e-mail</strong>
+                        </div>
+                        <div class="perfil-dado">
+                            <span>Data de nascimento</span>
+                            <strong>Data cadastrada</strong>
+                        </div>
+                        <div class="perfil-dado">
+                            <span>Perfil alimentar</span>
+                            <strong>Vegano</strong>
+                        </div>
+                        <div class="perfil-dado">
+                            <span>Endereço</span>
+                            <strong>Endereço cadastrado</strong>
+                        </div>
+                    </div>
+                </section>
+        
+                <section class="perfil-card" id="editar">
+                    <h2>Editar perfil</h2>
+                    <p>Atualize seus dados pessoais.</p>
+        
+                    <!-- MANTENHA AQUI SEU FORMULÁRIO THYMELEAF ORIGINAL -->
+        
+                </section>
+        
+                <section class="perfil-card">
+                    <div class="perfil-favoritos">
+                        <div>
+                            <h2>Meus favoritos</h2>
+                            <p>Veja os lugares que você salvou para encontrar depois.</p>
+                        </div>
+                        <a href="/favoritos" class="perfil-btn">
+                            Ver meus favoritos
+                        </a>
+                    </div>
+                </section>
+        
+            </main>
+        </div>
+        
         <div class="profile-edit">
             <div class="profile-heading">
                 <div>
@@ -73,15 +134,18 @@
                         <label for="nome">Nome completo</label>
                         <input id="nome" type="text" th:field="*{nome}" maxlength="50" autocomplete="name" required>
                     </div>
+
                     <div class="form-field">
                         <label for="email">E-mail</label>
                         <input id="email" type="email" th:value="${email}" autocomplete="email" readonly>
                         <small>Este é o e-mail usado para entrar na sua conta.</small>
                     </div>
+
                     <div class="form-field">
                         <label for="dataNascimento">Data de nascimento</label>
                         <input id="dataNascimento" type="date" th:field="*{dataNascimento}">
                     </div>
+
                     <div class="form-field">
                         <label for="perfilAlimentar">Perfil alimentar</label>
                         <select id="perfilAlimentar" th:field="*{perfilAlimentar}" required>
@@ -91,10 +155,12 @@
                                     th:text="${opcao.descricao}">Vegetariano</option>
                         </select>
                     </div>
+
                     <div class="form-field form-field-wide">
                         <label for="endereco">Endereço</label>
                         <input id="endereco" type="text" th:field="*{endereco}"
-                               placeholder="Rua, número, bairro, cidade" autocomplete="street-address" required>
+                               placeholder="Rua, número, bairro, cidade"
+                               autocomplete="street-address" required>
                         <small>Se você alterar o endereço, ele será atualizado para encontrar lugares próximos.</small>
                     </div>
                 </div>
