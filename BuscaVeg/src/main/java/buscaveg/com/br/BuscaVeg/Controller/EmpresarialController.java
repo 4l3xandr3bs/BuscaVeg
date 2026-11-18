@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import buscaveg.com.br.BuscaVeg.DTO.AlterarEmpresarialDTO;
 import buscaveg.com.br.BuscaVeg.DTO.CadastroEmpresarialDTO;
 import buscaveg.com.br.BuscaVeg.Entity.Empresarial;
+import buscaveg.com.br.BuscaVeg.Entity.Usuario;
 import buscaveg.com.br.BuscaVeg.Enum.EnumTipoEstabelecimento;
 import buscaveg.com.br.BuscaVeg.Excecao.RegraDeNegocioException;
 import buscaveg.com.br.BuscaVeg.Service.AvaliacaoService;
 import buscaveg.com.br.BuscaVeg.Service.FavoritoService;
 import buscaveg.com.br.BuscaVeg.Service.EmpresarialService;
+import buscaveg.com.br.BuscaVeg.Service.UsuarioService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,19 +33,23 @@ public class EmpresarialController {
     private final EmpresarialService oEmpresarialService;
     private final FavoritoService favoritoService;
     private final AvaliacaoService avaliacaoService;
+    private final UsuarioService usuarioService;
     @Value("${maptiler.api-key:}")
     private String maptilerApiKey;
-    
+
     @Value("${ors.api-key:}")
     private String orsApiKey;
+
     public EmpresarialController(
             EmpresarialService oEmpresarialService,
             FavoritoService favoritoService,
-            AvaliacaoService avaliacaoService) {
+            AvaliacaoService avaliacaoService,
+            UsuarioService usuarioService) {
 
         this.oEmpresarialService = oEmpresarialService;
         this.favoritoService = favoritoService;
         this.avaliacaoService = avaliacaoService;
+        this.usuarioService = usuarioService;
     }
 
     // GET /empresarialCTR/formCadastrarEmpresa
@@ -56,7 +62,6 @@ public class EmpresarialController {
         return "cadastroEmp";
     }
 
-  
     @PostMapping("/salvarEmpresa")
     public String cadastrarEmpresa(
             @ModelAttribute("empresarial") CadastroEmpresarialDTO dto,
@@ -89,20 +94,32 @@ public class EmpresarialController {
             empresas = empresas.stream()
                     .filter(empresa -> empresa.getNomeFantasia().toLowerCase(java.util.Locale.ROOT).contains(termo)
                             || empresa.getEndereco().toLowerCase(java.util.Locale.ROOT).contains(termo)
-                            || empresa.getTipoEspecializacao().name().toLowerCase(java.util.Locale.ROOT).contains(termo))
+                            || empresa.getTipoEspecializacao().name().toLowerCase(java.util.Locale.ROOT)
+                                    .contains(termo))
                     .toList();
         }
         oModel.addAttribute(
                 "empresas",
-                empresas
-        );
+                empresas);
         oModel.addAttribute("maptilerApiKey", maptilerApiKey);
-oModel.addAttribute("orsApiKey", orsApiKey);
+        oModel.addAttribute("orsApiKey", orsApiKey);
         oModel.addAttribute("busca", busca);
         oModel.addAttribute("resumosAvaliacoes", avaliacaoService.resumirEstabelecimentos());
         oModel.addAttribute("favoritosIds", favoritoService.listarIdsFavoritos(authentication.getName()));
-        oModel.addAttribute("ehUsuario", authentication.getAuthorities().stream()
-                .anyMatch(authority -> authority.getAuthority().equals("ROLE_USUARIO")));
+        boolean ehUsuario = authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_USUARIO"));
+        double latitudeInicial = -23.5505;
+        double longitudeInicial = -46.6333;
+        if (ehUsuario) {
+            Usuario usuario = usuarioService.buscarPorEmailDaConta(authentication.getName());
+            if (usuario.getLatitude() != null && usuario.getLongitude() != null) {
+                latitudeInicial = usuario.getLatitude();
+                longitudeInicial = usuario.getLongitude();
+            }
+        }
+        oModel.addAttribute("latitudeInicial", latitudeInicial);
+        oModel.addAttribute("longitudeInicial", longitudeInicial);
+        oModel.addAttribute("ehUsuario", ehUsuario);
 
         return "lugares"; // templates/listarEmpresas.html
     }
@@ -132,15 +149,14 @@ oModel.addAttribute("orsApiKey", orsApiKey);
             Model oModel) {
 
         // Se a empresa não for da pessoa logada, o Service nega o acesso (403).
-        Empresarial empresa =
-                oEmpresarialService.buscarEmpresaDoLogado(id, principal.getName());
+        Empresarial empresa = oEmpresarialService.buscarEmpresaDoLogado(id, principal.getName());
 
-        // O formulário precisa do id para montar o th:action="@{/empresarialCTR/alterarEmpresa/{id}(id=${empresaId})}".
+        // O formulário precisa do id para montar o
+        // th:action="@{/empresarialCTR/alterarEmpresa/{id}(id=${empresaId})}".
         oModel.addAttribute("empresaId", empresa.getId());
         oModel.addAttribute(
                 "empresarial",
-                oEmpresarialService.montarDtoDeEdicao(empresa)
-        );
+                oEmpresarialService.montarDtoDeEdicao(empresa));
         oModel.addAttribute("empresa", empresa);
         oModel.addAttribute("tiposEstabelecimento", EnumTipoEstabelecimento.values());
 

@@ -2,6 +2,7 @@ package buscaveg.com.br.BuscaVeg.SecrityConfig;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -34,7 +35,10 @@ public class SecurityConfig {
                         .requestMatchers("/favoritos", "/favoritos/**")
                         .hasRole("USUARIO")
 
-                        .requestMatchers("/avaliacoes", "/avaliacoes/**")
+                        .requestMatchers(HttpMethod.GET, "/avaliacoes", "/avaliacoes/**")
+                        .hasAnyRole("USUARIO", "EMPRESA")
+
+                        .requestMatchers(HttpMethod.POST, "/avaliacoes", "/avaliacoes/**")
                         .hasRole("USUARIO")
 
                         .requestMatchers("/cardapio/empresa", "/cardapio/empresa/**")

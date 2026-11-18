@@ -2,6 +2,7 @@ package buscaveg.com.br.BuscaVeg.Controller;
 
 import java.security.Principal;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,12 +29,17 @@ public class AvaliacaoController {
     public String avaliarPrato(
             @RequestParam(required = false) Long pratoId,
             Principal principal,
+            Authentication authentication,
             Model model) {
+        boolean ehUsuario = authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_USUARIO"));
+        model.addAttribute("ehUsuario", ehUsuario);
         if (pratoId != null) {
             PratoCardapio prato = avaliacaoService.buscarPrato(pratoId);
             model.addAttribute("prato", prato);
-            model.addAttribute("notaAtual",
-                    avaliacaoService.buscarNotaAtual(pratoId, principal.getName()));
+            model.addAttribute("notaAtual", ehUsuario
+                    ? avaliacaoService.buscarNotaAtual(pratoId, principal.getName())
+                    : null);
             model.addAttribute("resumo",
                     avaliacaoService.resumirPratos(java.util.List.of(prato)).get(pratoId));
         }

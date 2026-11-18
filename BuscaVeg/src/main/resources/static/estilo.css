@@ -41,7 +41,7 @@
  }
  
  nav a {
-     color: #555;
+     color: #ffffff;
      text-decoration: none;
      font-weight: bold;
  }
@@ -904,7 +904,7 @@ main {
     }
 }
 /* ===========
-AVALIAÇÃO
+AVALIAÇÃO + CARDAPIO()
 ================*/
 .food-rating,
 .place-rating {
