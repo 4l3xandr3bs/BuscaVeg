@@ -145,8 +145,7 @@ formulário POST para `/logout`.
 ## Como rodar
 
 1. Instale Java 17 e MySQL; crie um banco (ex.: `buscaveg`).
-2. Em `src/main/resources/application.properties`, configure a conexão
-   (exemplo comentado no próprio arquivo).
+2. Em `src/main/resources/application.properties`, configure a conexão para que encaixe-se com sua máquina.
 3. Na raiz do projeto: `./mvnw spring-boot:run` (Windows: `mvnw.cmd spring-boot:run`).
 4. Acesse `http://localhost:8080/usuarioCTR/formCadastrarUsuario`.
 
