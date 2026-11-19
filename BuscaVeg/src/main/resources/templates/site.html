@@ -9,20 +9,23 @@
 </head>
 <body>
 <header>
-    <div class="logo"><img src="/images/BUSCAVEG.png" alt="Logo BuscaVeg" style="width: 50; height: 80px;"></div>
+    <div class="logo"><img src="/images/BUSCAVEG.png" alt="Logo BuscaVeg" style="width: 50; height: 70px;"></div>
     <nav aria-label="Navegação principal">
         <a th:href="@{/site}" aria-current="page">Início</a>
         <a th:href="@{/empresarialCTR/listarEmpresas}">Lugares</a>
         <a th:if="${ehUsuario}" th:href="@{/favoritos}">Favoritos</a>
         <a th:if="${ehUsuario}" th:href="@{/usuarioCTR/perfil}">Meu perfil</a>
         <a th:unless="${ehUsuario}" th:href="@{/empresarialCTR/perfil}">Meu estabelecimento</a>
+        <form th:action="@{/logout}" method="post">
+            <button class="nav-logout" type="submit">Sair</button>
+        </form>
     </nav>
 </header>
 
-<main>
+<main class="site-page">
     <section class="hero">
         <h1>Encontre opções veganas e vegetarianas</h1>
-        <p>Descubra restaurantes e mercados próximos e confira os pratos compatíveis com seu perfil alimentar.</p>
+        <p>Descubra restaurantes e mercados próximos e confira os pratos compatíveis com seu perfil alimentar!</p>
         <form class="search-box" th:action="@{/empresarialCTR/listarEmpresas}" method="get">
             <label class="sr-only" for="place-search">Buscar lugares</label>
             <input id="place-search" name="busca" type="search" placeholder="Procure por restaurante ou lugar">
@@ -34,29 +37,29 @@
         <h2>Encontre o que procura</h2>
         <div class="category-container">
             <a class="category category-link" th:href="@{/empresarialCTR/listarEmpresas}">
-                <div class="category-icon">🥗</div>
+                <div class="category-icon">🍽️</div>
                 <h3>Restaurantes</h3>
-                <p>Confira os cardápios e opções vegetais.</p>
+                <p>Confira as opções de restaurantes perto de você!</p>
             </a>
             <a class="category category-link" th:href="@{/empresarialCTR/listarEmpresas}">
                 <div class="category-icon">🛒</div>
                 <h3>Mercados</h3>
-                <p>Encontre estabelecimentos perto de você.</p>
+                <p>Encontre mercados perto de você! </p>
             </a>
         </div>
     </section>
 
     <section class="places">
         <div class="section-title">
-            <h2>Comece a explorar</h2>
+            <h2>Está com duvida da onde visitar?</h2>
             <a th:href="@{/empresarialCTR/listarEmpresas}">Ver todos os lugares</a>
         </div>
     </section>
 </main>
 
 <footer>
-    <h3>🥗 BuscaVeg</h3>
-    <p>Encontre opções vegetarianas e veganas perto de você.</p>
+    <h3>𖧧 BuscaVeg</h3>
+    <p>Facilitando sua busca de uma alimentação saudável.</p>
     <p class="copyright">© 2026 BuscaVeg - Todos os direitos reservados.</p>
 </footer>
 </body>

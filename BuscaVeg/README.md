@@ -98,6 +98,7 @@ completo (inclusive o que ainda falta implementar) está em
 | `/empresarialCTR/salvarEmpresa` | POST | Público | Cria Conta (EMPRESA) + Empresarial |
 | `/empresarialCTR/listarEmpresas?busca=...` | GET | Logado | Lista/busca empresas; restaurantes levam ao cardápio |
 | `/usuarioCTR/perfil` | GET/POST | USUARIO | Exibe e atualiza o perfil da pessoa |
+| `/usuarioCTR/configuracoes` | GET/POST | USUARIO | Edita e salva os dados pessoais e preferências do perfil |
 | `/favoritos` | GET | USUARIO | Lista favoritos da pessoa |
 | `/favoritos/{id}` | POST | USUARIO | Adiciona estabelecimento aos favoritos |
 | `/favoritos/{id}/remover` | POST | USUARIO | Remove estabelecimento dos favoritos |
@@ -113,6 +114,8 @@ completo (inclusive o que ainda falta implementar) está em
 | `/cardapio/{id}/pratos/{pratoId}/remover` | POST | EMPRESA (dona) | Remove prato do cardápio |
 | `/avaliacoes?pratoId={id}` | GET | USUARIO | Abre a avaliação por estrelas de um prato |
 | `/avaliacoes` | POST | USUARIO | Cria ou atualiza a nota (1 a 5) do usuário para o prato |
+| `/api/rotas?empresarialId=...&startLat=...&startLng=...` | GET | Logado | Busca o destino salvo do estabelecimento e consulta o OpenRouteService |
+| `/api/lugares/proximos?lat=...&lng=...&raioKm=...` | GET | Logado | Lista estabelecimentos dentro do raio solicitado |
 
 Depois do login: conta **EMPRESA** vai para `/empresarialCTR/minhaEmpresa`;
 conta **USUARIO** vai para `/usuarioCTR/perfil`. Do site, a pessoa abre Lugares e,

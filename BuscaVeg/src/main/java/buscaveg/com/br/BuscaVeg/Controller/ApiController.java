@@ -5,20 +5,42 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import buscaveg.com.br.BuscaVeg.Entity.Empresarial;
 import buscaveg.com.br.BuscaVeg.Repository.EmpresarialRepository;
+import buscaveg.com.br.BuscaVeg.Service.RotaService;
 
 @RestController
 public class ApiController {
 
     private final EmpresarialRepository empresarialRepository;
+    private final RotaService rotaService;
 
-    public ApiController(EmpresarialRepository empresarialRepository) {
+    public ApiController(EmpresarialRepository empresarialRepository, RotaService rotaService) {
         this.empresarialRepository = empresarialRepository;
+        this.rotaService = rotaService;
+    }
+
+    @GetMapping("/api/rotas")
+    public ResponseEntity<String> calcularRota(
+            @RequestParam Long empresarialId,
+            @RequestParam double startLat,
+            @RequestParam double startLng) {
+        Empresarial empresa = empresarialRepository.findById(empresarialId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Estabelecimento não encontrado."));
+        if (empresa.getLatitude() == null || empresa.getLongitude() == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "O estabelecimento não possui coordenadas cadastradas.");
+        }
+        return rotaService.calcularRota(
+                startLat, startLng, empresa.getLatitude(), empresa.getLongitude());
     }
 
     @GetMapping("/api/lugares/proximos")

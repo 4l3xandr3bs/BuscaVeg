@@ -53,6 +53,33 @@ public class UsuarioController {
         return "perfil";
     }
 
+    @GetMapping("/configuracoes")
+    public String configuracoes(Principal principal, Model model) {
+        Usuario usuario = oUsuarioService.buscarPorEmailDaConta(principal.getName());
+        model.addAttribute("perfil", montarPerfilDTO(usuario));
+        carregarOpcoesConfiguracoes(model, principal.getName());
+        return "configuracoes";
+    }
+
+    @PostMapping("/configuracoes")
+    public String atualizarConfiguracoes(
+            @ModelAttribute("perfil") PerfilUsuarioDTO dto,
+            Principal principal,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+        try {
+            oUsuarioService.atualizarPerfil(principal.getName(), dto);
+        } catch (RegraDeNegocioException e) {
+            model.addAttribute("erro", e.getMessage());
+            model.addAttribute("perfil", dto);
+            carregarOpcoesConfiguracoes(model, principal.getName());
+            return "configuracoes";
+        }
+
+        redirectAttributes.addFlashAttribute("sucesso", "Suas informações foram atualizadas.");
+        return "redirect:/usuarioCTR/configuracoes";
+    }
+
     @PostMapping("/perfil")
     public String atualizarPerfil(
             @ModelAttribute("perfil") PerfilUsuarioDTO dto,
@@ -99,5 +126,10 @@ public class UsuarioController {
         dto.setPerfilAlimentar(usuario.getPerfilAlimentar());
         dto.setEndereco(usuario.getEndereco());
         return dto;
+    }
+
+    private void carregarOpcoesConfiguracoes(Model model, String email) {
+        model.addAttribute("email", email);
+        model.addAttribute("perfisAlimentares", EnumPerfilAlimentar.values());
     }
 }

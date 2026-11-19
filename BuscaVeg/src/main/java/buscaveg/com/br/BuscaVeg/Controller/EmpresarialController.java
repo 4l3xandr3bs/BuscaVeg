@@ -37,9 +37,6 @@ public class EmpresarialController {
     @Value("${maptiler.api-key:}")
     private String maptilerApiKey;
 
-    @Value("${ors.api-key:}")
-    private String orsApiKey;
-
     public EmpresarialController(
             EmpresarialService oEmpresarialService,
             FavoritoService favoritoService,
@@ -102,7 +99,6 @@ public class EmpresarialController {
                 "empresas",
                 empresas);
         oModel.addAttribute("maptilerApiKey", maptilerApiKey);
-        oModel.addAttribute("orsApiKey", orsApiKey);
         oModel.addAttribute("busca", busca);
         oModel.addAttribute("resumosAvaliacoes", avaliacaoService.resumirEstabelecimentos());
         oModel.addAttribute("favoritosIds", favoritoService.listarIdsFavoritos(authentication.getName()));

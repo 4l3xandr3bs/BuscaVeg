@@ -29,7 +29,8 @@ public class SecurityConfig {
                         .permitAll()
 
                         .requestMatchers(
-                                "/usuarioCTR/perfil")
+                                "/usuarioCTR/perfil",
+                                "/usuarioCTR/configuracoes")
                         .hasRole("USUARIO")
 
                         .requestMatchers("/favoritos", "/favoritos/**")
