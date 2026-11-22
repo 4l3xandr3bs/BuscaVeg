@@ -208,7 +208,7 @@
         <a th:if="${ehUsuario}" th:href="@{/usuarioCTR/perfil}">Perfil</a>
         <a th:unless="${ehUsuario}" th:href="@{/empresarialCTR/perfil}">Perfil do estabelecimento</a>
         <form th:action="@{/logout}" method="post">
-            <button class="nav-logout" type="submit">Sair</button>
+            <button class="nav-logout" type="submit"><span style="font-size: 17px;">Sair</span></button>
         </form>
     </nav>
 </header>
@@ -270,15 +270,18 @@
 <form th:action="@{/favoritos/{id}(id=${empresa.id})}" method="post">
     <button class="favorite-btn" type="submit"
             th:if="${ehUsuario and favoritosIds != null and !favoritosIds.contains(empresa.id)}">
+            <span style="">
         ♡ Adicionar aos favoritos
+        </span>
     </button>
 </form>
 
 <form th:action="@{/favoritos/{id}/remover(id=${empresa.id})}" method="post">
     <button class="favorite-btn is-favorite" type="submit"
             th:if="${ehUsuario and favoritosIds != null and favoritosIds.contains(empresa.id)}">
+            <span style="">
         ♥ Remover dos favoritos
-    </button>
+            </span> </button>
 </form>
 
                     <button class="route-btn"
