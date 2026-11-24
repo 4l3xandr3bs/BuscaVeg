@@ -65,7 +65,7 @@ public class SecurityConfig {
                             response.sendRedirect(request.getContextPath()
                                     + (ehEmpresa
                                             ? "/empresarialCTR/minhaEmpresa"
-                                            : "/usuarioCTR/perfil"));
+                                            : "/site"));
                         })
                         .permitAll())
 

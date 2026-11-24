@@ -5,6 +5,7 @@ import java.security.Principal;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,8 @@ import buscaveg.com.br.BuscaVeg.Service.EmpresarialService;
 import buscaveg.com.br.BuscaVeg.Service.UsuarioService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Value;
 
 @Controller
@@ -59,23 +62,25 @@ public class EmpresarialController {
         return "cadastroEmp";
     }
 
-    @PostMapping("/salvarEmpresa")
-    public String cadastrarEmpresa(
-            @ModelAttribute("empresarial") CadastroEmpresarialDTO dto,
-            Model oModel) {
+   @PostMapping("/salvarEmpresa")
+public String cadastrarEmpresa(
+        @Valid @ModelAttribute("empresarial") CadastroEmpresarialDTO dto,
+        BindingResult bindingResult,
+        Model model) {
 
-        try {
-            oEmpresarialService.cadastrarEmpresa(dto);
-
-        } catch (RegraDeNegocioException e) {
-            // Mesmo tratamento do cadastro de usuário: volta ao formulário
-            // com a mensagem de erro.
-            oModel.addAttribute("erro", e.getMessage());
-            return "cadastroEmp";
-        }
-
-        return "redirect:/usuarioCTR/login?cadastrado";
+    if (bindingResult.hasErrors()) {
+        return "cadastroEmp";
     }
+
+    try {
+        oEmpresarialService.cadastrarEmpresa(dto);
+    } catch (RegraDeNegocioException e) {
+        model.addAttribute("erro", e.getMessage());
+        return "cadastroEmp";
+    }
+
+    return "redirect:/usuarioCTR/login?cadastrado";
+}
 
     // GET /empresarialCTR/listarEmpresas
     // Lista todas as empresas (qualquer pessoa logada pode ver).

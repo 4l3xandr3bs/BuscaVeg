@@ -1,6 +1,9 @@
 package buscaveg.com.br.BuscaVeg.DTO;
 
 import buscaveg.com.br.BuscaVeg.Enum.EnumTipoEstabelecimento;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 /**
@@ -20,11 +23,18 @@ public class CadastroEmpresarialDTO {
 
     private String password;
 
-    // Dados do estabelecimento (vão para a entidade Empresarial)
+  
+  
+   @NotBlank(message = "Informe o CNPJ.")
+    @Valid
     private String cnpj;
 
+    @NotBlank(message = "Informe o nome da empresa.")
+    @Size(max = 100, message = "O nome da empresa deve ter no máximo 100 caracteres.")
     private String nomeFantasia;
 
+    @NotBlank(message = "Informe a razão social.")
+    @Size(max = 200, message = "A razão social deve ter no máximo 200 caracteres.")
     private String razaoSocial;
 
     private String endereco;

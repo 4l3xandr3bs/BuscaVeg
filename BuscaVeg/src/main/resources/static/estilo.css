@@ -302,6 +302,24 @@
      font-size: 11px;
      font-weight: bold;
  }
+
+ .eyebrow {
+     color: #319447;
+     font-size: 12px;
+     font-weight: bold;
+     text-transform: uppercase;
+ }
+
+ .notice {
+     margin: 20px 0;
+     padding: 13px 16px;
+     border-radius: 9px;
+ }
+
+ .notice-success {
+     background: #e3f3e4;
+     color: #237a32;
+ }
  
  /* ================================================================= *
   * BARRA DE PESQUISA (SEARCH BOX)
@@ -802,6 +820,80 @@ main {
     line-height: 1.6;
 }
 
+/* =========================================
+   PERFIL DO USUÁRIO
+========================================= */
+.profile-page .hero {
+    padding: 45px 20px 20px;
+}
+
+.profile-page .hero h1 {
+    margin-bottom: 10px;
+}
+
+.profile-page .hero p {
+    line-height: 1.6;
+}
+
+.profile-card {
+    width: 100%;
+    margin: 25px auto 0;
+    padding: 30px;
+    background: #fff;
+    border: 1px solid #e5eee4;
+    border-radius: 18px;
+    box-shadow: 0 5px 20px rgba(35, 80, 40, .08);
+}
+
+.profile-card-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding-bottom: 22px;
+    border-bottom: 1px solid #e9eee8;
+}
+
+.profile-card-heading h2 {
+    margin: 8px 0;
+    color: #263d2b;
+    font-size: 27px;
+    overflow-wrap: anywhere;
+}
+
+.profile-card-heading p {
+    color: #68756a;
+    line-height: 1.6;
+}
+
+.profile-card-heading .tag {
+    margin-bottom: 0;
+}
+
+.favorites-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 28px;
+    margin-top: 25px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, .08);
+}
+
+.favorites-section h2 {
+    margin-bottom: 6px;
+    color: #245c29;
+}
+
+.favorites-section p {
+    color: #68756a;
+    line-height: 1.6;
+}
+
 .site-page {
     width: min(92%, 1200px);
 }
@@ -1059,9 +1151,21 @@ main {
 
     .business-actions,
     .business-card-heading,
+    .profile-card-heading,
+    .favorites-section,
     .manager-heading {
         align-items: stretch;
         flex-direction: column;
+    }
+
+    .profile-card,
+    .favorites-section {
+        padding: 20px;
+    }
+
+    .profile-card-heading .primary-button,
+    .favorites-section .secondary-button {
+        width: 100%;
     }
 }
 /* ===========

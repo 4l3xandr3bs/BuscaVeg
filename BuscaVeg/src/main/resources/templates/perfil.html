@@ -1,3 +1,83 @@
-<form th:action="@{/logout}" method="post">
-            <button class="nav-logout" type="submit"><span style="font-size: 17px;">Sair</span></button>
+
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuscaVeg - Meu perfil</title>
+    <link rel="stylesheet" th:href="@{/estilo.css}">
+</head>
+<body>
+<header>
+    <div class="logo"><img src="/images/BUSCAVEG.png" alt="Logo BuscaVeg" style="width: 50; height: 70px;"></div>
+    <nav aria-label="Navegação principal">
+        <a th:href="@{/site}">Início</a>
+        <a th:href="@{/empresarialCTR/listarEmpresas}">Lugares</a>
+        <a href="#favoritos">Favoritos</a>
+        <a th:href="@{/usuarioCTR/configuracoes}">Configurações</a>
+        <a th:href="@{/usuarioCTR/perfil}" aria-current="page">Meu perfil</a>
+        <form th:action="@{/logout}" method="post">
+            <button class="nav-logout" type="submit">Sair</button>
         </form>
+    </nav>
+</header>
+
+<main class="profile-page">
+    <section class="hero">
+        <p class="eyebrow">Área do usuário</p>
+        <h1>Meu perfil</h1>
+        <p>Consulte e atualize suas informações pessoais do BuscaVeg.</p>
+    </section>
+
+    <div th:if="${sucesso}" class="notice notice-success" role="status" th:text="${sucesso}"></div>
+
+    <section class="profile-card">
+        <div class="profile-card-heading">
+            <div>
+                <span class="tag" th:text="${perfil.perfilAlimentar.descricao}">VEGETARIANO</span>
+                <h2 th:text="${perfil.nome}">Nome do usuário</h2>
+                <p>Suas informações pessoais</p>
+            </div>
+            <a class="primary-button" th:href="@{/usuarioCTR/configuracoes}">
+                Editar informações
+            </a>
+        </div>
+
+        <dl class="profile-details">
+            <div>
+                <dt>E-mail</dt>
+                <dd th:text="${email}">email@exemplo.com</dd>
+            </div>
+            <div>
+                <dt>Data de nascimento</dt>
+                <dd th:text="${perfil.dataNascimento != null ? #temporals.format(perfil.dataNascimento, 'dd/MM/yyyy') : 'Não informada'}">Não informada</dd>
+            </div>
+            <div>
+                <dt>Perfil alimentar</dt>
+                <dd th:text="${perfil.perfilAlimentar.descricao}">Vegetariano</dd>
+            </div>
+            <div class="detail-address">
+                <dt>Endereço</dt>
+                <dd th:text="${perfil.endereco}">Endereço do usuário</dd>
+            </div>
+        </dl>
+    </section>
+
+    <section class="favorites-section" id="favoritos">
+        <div>
+            <p class="eyebrow">Sua lista</p>
+            <h2>Meus favoritos</h2>
+            <p>Veja os lugares que você salvou para encontrar depois.</p>
+        </div>
+        <a class="secondary-button link-button" th:href="@{/favoritos}">Ver meus favoritos</a>
+    </section>
+</main>
+
+<footer>
+    <h3>𖧧 BuscaVeg</h3>
+    <p>Encontre opções vegetarianas e veganas perto de você.</p>
+    <p class="copyright">© 2026 BuscaVeg - Todos os direitos reservados.</p>
+</footer>
+
+</body>
+</html>
