@@ -167,10 +167,3 @@ formulário POST para `/logout`.
 | `EnumNivelLotacao` | Criado, ainda sem uso |
 
 ## Pendências conhecidas
-implementação de comentários na avaliação.html
-visualização de tempo estimado para o local usando meios diferentes de locução em lugares.html
-personalização do plano de fundo
-fotos dos estabelecimentos + pratos
-
-1. configurar lugares.html + alguns erros
-2. estilização das telas
