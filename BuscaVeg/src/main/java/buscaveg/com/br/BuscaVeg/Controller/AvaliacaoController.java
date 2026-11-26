@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,6 +47,25 @@ public class AvaliacaoController {
         return "avaliacoes";
     }
 
+    @GetMapping("/mercado/{mercadoId}")
+    public String avaliarMercado(
+            @PathVariable Long mercadoId,
+            Principal principal,
+            Authentication authentication,
+            Model model) {
+        boolean ehUsuario = authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_USUARIO"));
+        model.addAttribute("ehUsuario", ehUsuario);
+        model.addAttribute("mercado", avaliacaoService.buscarMercado(mercadoId));
+        model.addAttribute("notaAtualMercado", ehUsuario
+                ? avaliacaoService.buscarNotaAtualMercado(mercadoId, principal.getName())
+                : null);
+        model.addAttribute(
+                "resumoMercado",
+                avaliacaoService.resumirMercados().get(mercadoId));
+        return "avaliacoes";
+    }
+
     @PostMapping
     public String salvarAvaliacao(
             @RequestParam Long pratoId,
@@ -60,6 +80,23 @@ public class AvaliacaoController {
         } catch (RegraDeNegocioException e) {
             redirectAttributes.addFlashAttribute("erro", e.getMessage());
             return "redirect:/avaliacoes?pratoId=" + pratoId;
+        }
+    }
+
+    @PostMapping("/mercado")
+    public String salvarAvaliacaoMercado(
+            @RequestParam Long mercadoId,
+            @RequestParam Integer nota,
+            Principal principal,
+            RedirectAttributes redirectAttributes) {
+        try {
+            Long id = avaliacaoService.avaliarMercado(
+                    mercadoId, principal.getName(), nota);
+            redirectAttributes.addFlashAttribute("sucesso", "Sua avaliação foi salva.");
+            return "redirect:/avaliacoes/mercado/" + id;
+        } catch (RegraDeNegocioException e) {
+            redirectAttributes.addFlashAttribute("erro", e.getMessage());
+            return "redirect:/avaliacoes/mercado/" + mercadoId;
         }
     }
 }

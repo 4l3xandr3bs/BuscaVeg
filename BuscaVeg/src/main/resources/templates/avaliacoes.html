@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BuscaVeg - Avaliar prato</title>
+    <title th:text="${mercado != null ? 'BuscaVeg - Avaliar mercado' : 'BuscaVeg - Avaliar prato'}">
+        BuscaVeg - Avaliar prato
+    </title>
     <link rel="stylesheet" th:href="@{/estilo.css}">
 </head>
 <body>
@@ -25,17 +27,71 @@
 
 <main class="reviews-page">
     <section class="review-form">
-        <p class="eyebrow">Avaliação de comida</p>
+        <p class="eyebrow" th:text="${mercado != null ? 'Avaliação do mercado' : 'Avaliação de comida'}">
+            Avaliação de comida
+        </p>
         <h1>Avalie com estrelas</h1>
-        <p>Compartilhe sua nota para este prato. A avaliação é somente por estrelas.</p>
+        <p th:if="${mercado != null}">
+            Compartilhe sua experiência com este mercado. A avaliação é somente por estrelas.
+        </p>
+        <p th:if="${mercado == null}">
+            Compartilhe sua nota para este prato. A avaliação é somente por estrelas.
+        </p>
 
         <div th:if="${sucesso}" class="notice notice-success" role="status" th:text="${sucesso}"></div>
         <div th:if="${erro}" class="notice notice-error" role="alert" th:text="${erro}"></div>
 
-        <div th:if="${prato == null}" class="empty-state">
+        <div th:if="${prato == null and mercado == null}" class="empty-state">
             <p>Para avaliar, abra o cardápio de um restaurante e escolha um prato.</p>
             <a class="primary-button" th:href="@{/empresarialCTR/listarEmpresas}">Ver lugares</a>
         </div>
+
+        <section th:if="${mercado != null}">
+            <p class="eyebrow" th:text="${mercado.nomeFantasia}">Mercado</p>
+            <h2>Avalie este mercado</h2>
+            <p th:text="${mercado.endereco}">Endereço do mercado</p>
+            <p class="food-rating" th:if="${resumoMercado != null}"
+               th:text="|Nota atual: ★ ${#numbers.formatDecimal(resumoMercado.media, 1, 1)} (${resumoMercado.quantidade} avaliações)|">
+                Nota atual: ★ 4,5 (2 avaliações)
+            </p>
+            <p class="food-rating" th:unless="${resumoMercado != null}">
+                Este mercado ainda não tem avaliações.
+            </p>
+
+            <form th:if="${ehUsuario}" class="star-review-form"
+                  th:action="@{/avaliacoes/mercado}" method="post">
+                <input type="hidden" name="mercadoId" th:value="${mercado.id}">
+                <fieldset>
+                    <legend th:text="${notaAtualMercado == null ? 'Sua nota' : 'Atualize sua nota'}">
+                        Sua nota
+                    </legend>
+                    <div class="star-rating" role="radiogroup" aria-label="Nota de 1 a 5 estrelas">
+                        <input id="market-rating-5" type="radio" name="nota" value="5" required
+                               th:checked="${notaAtualMercado == 5}">
+                        <label for="market-rating-5" title="5 estrelas" aria-label="5 estrelas">★</label>
+                        <input id="market-rating-4" type="radio" name="nota" value="4"
+                               th:checked="${notaAtualMercado == 4}">
+                        <label for="market-rating-4" title="4 estrelas" aria-label="4 estrelas">★</label>
+                        <input id="market-rating-3" type="radio" name="nota" value="3"
+                               th:checked="${notaAtualMercado == 3}">
+                        <label for="market-rating-3" title="3 estrelas" aria-label="3 estrelas">★</label>
+                        <input id="market-rating-2" type="radio" name="nota" value="2"
+                               th:checked="${notaAtualMercado == 2}">
+                        <label for="market-rating-2" title="2 estrelas" aria-label="2 estrelas">★</label>
+                        <input id="market-rating-1" type="radio" name="nota" value="1"
+                               th:checked="${notaAtualMercado == 1}">
+                        <label for="market-rating-1" title="1 estrela" aria-label="1 estrela">★</label>
+                    </div>
+                    <button class="primary-button" type="submit">Salvar avaliação</button>
+                </fieldset>
+            </form>
+            <p th:unless="${ehUsuario}" class="empty-state">
+                Contas de estabelecimento podem apenas visualizar as avaliações.
+            </p>
+            <a class="secondary-button" th:href="@{/empresarialCTR/listarEmpresas(lugar=${mercado.id})}">
+                Voltar aos lugares
+            </a>
+        </section>
 
         <section th:if="${prato != null}">
             <p class="eyebrow" th:text="${prato.empresarial.nomeFantasia}">Restaurante</p>

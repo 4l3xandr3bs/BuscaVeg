@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap');
+
 /* ================================================================= *
  * RESET E ESTILO GLOBAL
  * ================================================================= */
@@ -11,7 +13,7 @@
  }
  
  body {
-     font-family: Arial, sans-serif;
+     font-family: 'Nunito', Arial, sans-serif;
      background: #f5f7f5;
      color: #333;
      min-height: 100vh;

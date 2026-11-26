@@ -26,19 +26,22 @@ public class EmpresarialService {
     private final GeoService geoService;
     private final FavoritoService favoritoService;
     private final CardapioService cardapioService;
+    private final AvaliacaoService avaliacaoService;
 
     public EmpresarialService(
             EmpresarialRepository oEmpresarialRepository,
             ContaService oContaService,
             GeoService geoService,
             FavoritoService favoritoService,
-            CardapioService cardapioService) {
+            CardapioService cardapioService,
+            AvaliacaoService avaliacaoService) {
 
         this.oEmpresarialRepository = oEmpresarialRepository;
         this.oContaService = oContaService;
         this.geoService = geoService;
         this.favoritoService = favoritoService;
         this.cardapioService = cardapioService;
+        this.avaliacaoService = avaliacaoService;
     }
 
     public Empresarial buscarEmpresarialPorId(Long id) {
@@ -171,6 +174,7 @@ public class EmpresarialService {
         Conta conta = empresa.getConta();
 
         cardapioService.removerCardapioDoEstabelecimento(id);
+        avaliacaoService.removerAvaliacoesDoMercado(id);
         favoritoService.removerEstabelecimentoDeTodos(id);
         oEmpresarialRepository.delete(empresa);
         oContaService.excluirConta(conta);

@@ -262,10 +262,22 @@
                         </span>
                         <span th:unless="${resumo != null}">Ainda sem avaliações dos pratos</span>
                     </p>
+                    <p class="place-rating"
+                       th:if="${empresa.tipoEspecializacao != null and empresa.tipoEspecializacao.name() == 'MERCADO'}"
+                       th:with="resumo=${resumosAvaliacoesMercados[empresa.id]}">
+                        <span th:if="${resumo != null}"
+                              th:text="|★ ${#numbers.formatDecimal(resumo.media, 1, 1)} · ${resumo.quantidade} avaliações|">
+                            ★ 4,5 · 2 avaliações
+                        </span>
+                        <span th:unless="${resumo != null}">Ainda sem avaliações</span>
+                    </p>
 
                     <a class="menu-link"
                        th:if="${empresa.tipoEspecializacao != null and empresa.tipoEspecializacao.name() == 'RESTAURANTE'}"
                        th:href="@{/cardapio/{id}(id=${empresa.id})}">Ver cardápio</a>
+                    <a class="menu-link"
+                       th:if="${empresa.tipoEspecializacao != null and empresa.tipoEspecializacao.name() == 'MERCADO'}"
+                       th:href="@{/avaliacoes/mercado/{id}(id=${empresa.id})}">Avaliar mercado</a>
 
 <form th:action="@{/favoritos/{id}(id=${empresa.id})}" method="post">
     <button class="favorite-btn" type="submit"

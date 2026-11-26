@@ -106,6 +106,7 @@ public String cadastrarEmpresa(
         oModel.addAttribute("maptilerApiKey", maptilerApiKey);
         oModel.addAttribute("busca", busca);
         oModel.addAttribute("resumosAvaliacoes", avaliacaoService.resumirEstabelecimentos());
+        oModel.addAttribute("resumosAvaliacoesMercados", avaliacaoService.resumirMercados());
         oModel.addAttribute("favoritosIds", favoritoService.listarIdsFavoritos(authentication.getName()));
         boolean ehUsuario = authentication.getAuthorities().stream()
                 .anyMatch(authority -> authority.getAuthority().equals("ROLE_USUARIO"));
